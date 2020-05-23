@@ -75,7 +75,7 @@ class PageNotFound extends Component {
       cellRenderer: ({ value }) => value ? moment(value).format('LL') : 'N/A'
     }, {
       headerName: "Actions",
-      width: 110,
+      width: 90,
       pinned: 'right',
       cellRendererFramework: ({ data }) => {
         return (

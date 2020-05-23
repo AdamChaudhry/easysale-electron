@@ -1,1 +1,1 @@
-require('./database');
+import './database';

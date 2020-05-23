@@ -283,7 +283,6 @@
     "electron-log": "^4.0.6",
     "electron-updater": "^4.2.0",
     "history": "^4.10.1",
-    "mongodb-client-encryption": "^1.0.1",
     "mongoose": "^5.9.15",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
@@ -333,10 +332,5 @@
     "extends": [
       "bliss"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   }
 }

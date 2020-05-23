@@ -1,1 +1,1 @@
-require('./products');
+import './products';

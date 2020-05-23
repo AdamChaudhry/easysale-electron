@@ -1,14 +1,19 @@
-const { Product } = require('../../models');
+import { Product } from '../../models';
 
-const getProducts = async ({ }) => {
+const getProducts = async ({ keyword, skip = 0, limit = 25 }) => {
+  const match = {};
+
+  if (keyword) {
+    match.Name = new RegExp(keyword);
+  }
+
   const products = await Product.aggregate([
-    {
-      $skip: 0
-    }, {
-      $limit: 20
-    }
+    { $match: match },
+    { $skip: skip },
+    { $limit: limit }
   ]);
-  return { products };
-}
 
-module.exports = getProducts;
+  return { products };
+};
+
+export default getProducts;
