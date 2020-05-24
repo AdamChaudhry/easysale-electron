@@ -52,7 +52,7 @@ export default merge.smart(baseConfig, {
     ...(process.env.PLAIN_HMR ? [] : ['react-hot-loader/patch']),
     `webpack-dev-server/client?http://localhost:${port}/`,
     'webpack/hot/only-dev-server',
-    require.resolve('../app/index.tsx')
+    require.resolve('../app/index.jsx')
   ],
 
   output: {
@@ -93,6 +93,26 @@ export default merge.smart(baseConfig, {
             }
           }
         ]
+      },
+      {
+        test: /\.less$/,
+        use: [{
+          loader: 'style-loader',
+        }, {
+          loader: 'css-loader', // translates CSS into CommonJS
+        }, {
+          loader: 'less-loader', // compiles Less to CSS
+          options: {
+            lessOptions: { // If you are using less-loader@5 please spread the lessOptions to options directly
+              modifyVars: {
+                'primary-color': '#e6315a',
+                'link-color': '#e6315a',
+                'border-radius-base': '2px',
+              },
+              javascriptEnabled: true,
+            },
+          },
+        }],
       },
       // SASS support - compile all .global.scss files and pipe it to style.css
       {

@@ -1,9 +1,7 @@
 const initialState = {
   loading: false,
   products: [],
-  filters: {
-    keyword: ''
-  }
+  filter: {}
 };
 
 const boxes = (state = initialState, action) => {

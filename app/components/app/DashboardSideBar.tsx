@@ -1,38 +1,60 @@
 import React from 'react';
-import { Sidenav, Dropdown, Nav, Icon } from 'rsuite';
+import { Menu } from 'antd';
+import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
+
+const { SubMenu } = Menu;
 
 const DashboardHeader = () => {
   return (
-    <Sidenav activeKey="1" style={{ height: '100%'}}>
-      <Sidenav.Body>
-        <Nav>
-          <Nav.Item eventKey="1" icon={<Icon icon="dashboard" />}>
-            Dashboard
-        </Nav.Item>
-          <Nav.Item eventKey="2" icon={<Icon icon="group" />}>
-            User Group
-        </Nav.Item>
-          <Dropdown eventKey="3" title="Advanced" icon={<Icon icon="magic" />}>
-            <Dropdown.Item eventKey="3-1">Geo</Dropdown.Item>
-            <Dropdown.Item eventKey="3-2">Devices</Dropdown.Item>
-            <Dropdown.Item eventKey="3-3">Loyalty</Dropdown.Item>
-            <Dropdown.Item eventKey="3-4">Visit Depth</Dropdown.Item>
-          </Dropdown>
-          <Dropdown
-            eventKey="4"
-            title="Settings"
-            icon={<Icon icon="gear-circle" />}>
-            <Dropdown.Item eventKey="4-1">Applications</Dropdown.Item>
-            <Dropdown.Item eventKey="4-2">Channels</Dropdown.Item>
-            <Dropdown.Item eventKey="4-3">Versions</Dropdown.Item>
-            <Dropdown.Menu eventKey="4-5" title="Custom Action">
-              <Dropdown.Item eventKey="4-5-1">Action Name</Dropdown.Item>
-              <Dropdown.Item eventKey="4-5-2">Action Params</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </Nav>
-      </Sidenav.Body>
-    </Sidenav>
+    <Menu
+        theme='dark'
+        style={{ height: '100%' }}
+        defaultSelectedKeys={['1']}
+        defaultOpenKeys={['sub1']}
+        mode="inline"
+        inlineCollapsed={true}
+      >
+        <SubMenu
+          key="sub1"
+          title={
+            <span>
+              <MailOutlined />
+              <span>Navigation One</span>
+            </span>
+          }
+        >
+          <Menu.ItemGroup key="g1" title="Item 1">
+            <Menu.Item key="1">Option 1</Menu.Item>
+            <Menu.Item key="2">Option 2</Menu.Item>
+          </Menu.ItemGroup>
+          <Menu.ItemGroup key="g2" title="Item 2">
+            <Menu.Item key="3">Option 3</Menu.Item>
+            <Menu.Item key="4">Option 4</Menu.Item>
+          </Menu.ItemGroup>
+        </SubMenu>
+        <SubMenu key="sub2" icon={<AppstoreOutlined />} title="Navigation Two">
+          <Menu.Item key="5">Option 5</Menu.Item>
+          <Menu.Item key="6">Option 6</Menu.Item>
+          <SubMenu key="sub3" title="Submenu">
+            <Menu.Item key="7">Option 7</Menu.Item>
+            <Menu.Item key="8">Option 8</Menu.Item>
+          </SubMenu>
+        </SubMenu>
+        <SubMenu
+          key="sub4"
+          title={
+            <span>
+              <SettingOutlined />
+              <span>Navigation Three</span>
+            </span>
+          }
+        >
+          <Menu.Item key="9">Option 9</Menu.Item>
+          <Menu.Item key="10">Option 10</Menu.Item>
+          <Menu.Item key="11">Option 11</Menu.Item>
+          <Menu.Item key="12">Option 12</Menu.Item>
+        </SubMenu>
+      </Menu>
   )
 }
 

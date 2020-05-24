@@ -39,3 +39,13 @@ export const getCategory = () => dispatch => {
       dispatch({ type: 'GET_CATEGORIES_FAILED' });
     });
 };
+
+export const SetFilter = ({ key, value }) => (dispatch, getState) => {
+  const { product } = getState();
+  const { filter } = product || {};
+
+  if (value) filter[key] = value;
+  else delete filter[key];
+
+  dispatch({ type: 'SET_FILTER_FOR_PRODUCT' });
+};

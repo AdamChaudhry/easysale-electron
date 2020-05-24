@@ -1,20 +1,22 @@
 import React from 'react';
-import { Container, Sidebar, Content } from 'rsuite';
+import { Layout } from 'antd';
+
+const { Sider, Content } = Layout;
 
 import DashboardHeader from '../components/app/DashboardHeader';
 import DashboardSideBar from '../components/app/DashboardSideBar';
 
 const AppLayout = ({ children }) => {
   return (
-    <Container style={{ height: '100vh' }}>
-      <DashboardHeader />
-      <Container>
-        <Sidebar>
-          <DashboardSideBar />
-        </Sidebar>
+    <Layout style={{ height: '100vh' }}>
+      <Sider collapsible={true}>
+        <DashboardSideBar />
+      </Sider>
+      <Layout>
+        {/* <DashboardHeader /> */}
         <Content style={{ margin: '10px' }}>{children}</Content>
-      </Container>
-    </Container>
+      </Layout>
+    </Layout>
   );
 }
 

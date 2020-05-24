@@ -1,10 +1,12 @@
 import React from 'react';
-import { Header, Navbar, Nav, Icon } from 'rsuite';
+import { Layout } from 'antd';
+
+const { Header } = Layout;
 
 const DashboardHeader = () => {
   return (
     <Header>
-      <Navbar appearance='inverse'>
+      {/* <Navbar appearance='inverse'>
         <Navbar.Header>
           <div
             style={{
@@ -19,7 +21,7 @@ const DashboardHeader = () => {
             <Nav.Item icon={<Icon icon="cog" />}>Settings</Nav.Item>
           </Nav>
         </Navbar.Body>
-      </Navbar>
+      </Navbar> */}
     </Header>
   )
 }
