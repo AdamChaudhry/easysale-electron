@@ -1,8 +1,8 @@
 import React from 'react';
-import { Menu } from 'antd';
-import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
+import { Menu, Divider } from 'antd';
+import { LineChartOutlined, ShoppingCartOutlined, SettingOutlined, DollarOutlined, UserOutlined, SisternodeOutlined, AppstoreOutlined, FileDoneOutlined } from '@ant-design/icons';
 
-const { SubMenu } = Menu;
+const { SubMenu, Item } = Menu;
 
 const DashboardHeader = () => {
   return (
@@ -12,47 +12,81 @@ const DashboardHeader = () => {
         defaultSelectedKeys={['1']}
         defaultOpenKeys={['sub1']}
         mode="inline"
-        inlineCollapsed={true}
-      >
+        inlineCollapsed={true}>
+        <Item key="1" icon={<LineChartOutlined />}>Dashboard</Item>
+        <Item key="2" icon={<ShoppingCartOutlined />}>POS</Item>
         <SubMenu
           key="sub1"
           title={
             <span>
-              <MailOutlined />
-              <span>Navigation One</span>
+              <DollarOutlined />
+              <span>Sale</span>
             </span>
-          }
-        >
-          <Menu.ItemGroup key="g1" title="Item 1">
-            <Menu.Item key="1">Option 1</Menu.Item>
-            <Menu.Item key="2">Option 2</Menu.Item>
-          </Menu.ItemGroup>
-          <Menu.ItemGroup key="g2" title="Item 2">
-            <Menu.Item key="3">Option 3</Menu.Item>
-            <Menu.Item key="4">Option 4</Menu.Item>
-          </Menu.ItemGroup>
+          }>
+          <Item key="3">Sale History</Item>
+          <Item key="4">Sale on Hold</Item>
         </SubMenu>
-        <SubMenu key="sub2" icon={<AppstoreOutlined />} title="Navigation Two">
-          <Menu.Item key="5">Option 5</Menu.Item>
-          <Menu.Item key="6">Option 6</Menu.Item>
-          <SubMenu key="sub3" title="Submenu">
-            <Menu.Item key="7">Option 7</Menu.Item>
-            <Menu.Item key="8">Option 8</Menu.Item>
-          </SubMenu>
+        <SubMenu
+          key="sub2"
+          title={
+            <span>
+              <FileDoneOutlined />
+              <span>Purchase</span>
+            </span>
+          }>
+          <Item key="5">New Purchase</Item>
+          <Item key="6">Purchase History</Item>
+          <Item key="7">New Expense</Item>
+          <Item key="8">Expense History</Item>
+        </SubMenu>
+        <SubMenu
+          key="sub3"
+          title={
+            <span>
+              <AppstoreOutlined />
+              <span>Products</span>
+            </span>
+          }>
+          <Item key="9">New Products</Item>
+          <Item key="10">Product List</Item>
+          <Item key="11">Import Products</Item>
         </SubMenu>
         <SubMenu
           key="sub4"
           title={
             <span>
-              <SettingOutlined />
-              <span>Navigation Three</span>
+              <SisternodeOutlined />
+              <span>Category</span>
             </span>
-          }
-        >
-          <Menu.Item key="9">Option 9</Menu.Item>
-          <Menu.Item key="10">Option 10</Menu.Item>
-          <Menu.Item key="11">Option 11</Menu.Item>
-          <Menu.Item key="12">Option 12</Menu.Item>
+          }>
+          <Item key="12">New Category</Item>
+          <Item key="13">Category List</Item>
+          <Item key="14">Import Category</Item>
+        </SubMenu>
+        <SubMenu
+          key="sub5"
+          title={
+            <span>
+              <SettingOutlined />
+              <span>Manufacturer</span>
+            </span>
+          }>
+          <Item key="16">New Manufacturer</Item>
+          <Item key="17">Manufacturer List</Item>
+          <Item key="18">Import Manufacturer</Item>
+        </SubMenu>
+        <SubMenu
+          key="sub6"
+          title={
+            <span>
+              <UserOutlined />
+              <span>Person</span>
+            </span>
+          }>
+          <Item key="19">Add User</Item>
+          <Item key="20">User List</Item>
+          <Item key="21">Add Customer</Item>
+          <Item key="22">Customer List</Item>
         </SubMenu>
       </Menu>
   )
