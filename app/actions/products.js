@@ -1,19 +1,23 @@
 import { ipcRenderer } from 'electron';
 
 export const getProducts = () => (dispatch, getState) => {
-  const { product } = getState();
-  const { filters } = product || {};
+  const { products } = getState();
+  const { filter, pagination } = products || {};
+  const { pageNo, pageSize } = pagination || {};
+
   dispatch({ type: 'GET_PRODUCTS_REQUEST' });
 
   ipcRenderer
     .invoke('GET_PRODUCTS', {
-      filters
+      filter,
+      limit: pageSize,
+      skip: (pageNo - 1) * pageSize
     })
     .then(data => {
-      const { products } = data || {};
+      const { products: filterProduct, total } = data || {};
       return dispatch({
         type: 'GET_PRODUCTS_SUCCESS',
-        payload: { products }
+        payload: { products: filterProduct, total }
       });
     })
     .catch(() => {
@@ -22,30 +26,59 @@ export const getProducts = () => (dispatch, getState) => {
 };
 
 export const getCategory = () => dispatch => {
-  dispatch({ type: 'GET_CATEGORIES_REQUEST' });
+  dispatch({ type: 'GET_CATEGORIES_FOR_PRODUCTS_REQUEST' });
 
   ipcRenderer
-    .invoke('GET_CATEGORIES', {
-      data: '123'
-    })
-    .then(data => {
-      const { products } = data || {};
+    .invoke('GET_CATEGORIES_FOR_FILTER')
+    .then((data) => {
+      const { categories } = data || {};
       return dispatch({
-        type: 'GET_CATEGORIES_SUCCESS',
-        payload: { products }
+        type: 'GET_CATEGORIES_FOR_PRODUCTS_SUCCESS',
+        payload: { categories }
       });
     })
     .catch(() => {
-      dispatch({ type: 'GET_CATEGORIES_FAILED' });
+      dispatch({ type: 'GET_CATEGORIES_FOR_PRODUCTS_FAILED' });
+    });
+};
+
+export const getManufacturer = () => dispatch => {
+  dispatch({ type: 'GET_MANUFACTURERS_FOR_PRODUCTS_REQUEST' });
+
+  ipcRenderer
+    .invoke('GET_MANUFACTURERS_FOR_FILTER')
+    .then((data) => {
+      const { manufacturers } = data || {};
+      return dispatch({
+        type: 'GET_MANUFACTURERS_FOR_PRODUCTS_SUCCESS',
+        payload: { manufacturers }
+      });
+    })
+    .catch(() => {
+      dispatch({ type: 'GET_MANUFACTURERS_FOR_PRODUCTS_FAILED' });
     });
 };
 
 export const SetFilter = ({ key, value }) => (dispatch, getState) => {
-  const { product } = getState();
-  const { filter } = product || {};
+  const { products } = getState();
+  const { filter } = products || {};
 
   if (value) filter[key] = value;
   else delete filter[key];
 
   dispatch({ type: 'SET_FILTER_FOR_PRODUCT' });
+};
+
+export const setPage = ({ pageNo }) => (dispatch) => {
+  dispatch({
+    type: 'SET_PAGE_NUMBER_FOR_PRODUCT',
+    payload: { pageNo }
+  });
+};
+
+export const setPageSize = ({ pageSize }) => (dispatch) => {
+  dispatch({
+    type: 'SET_PAGE_SIZE_FOR_PRODUCT',
+    payload: { pageSize }
+  });
 };

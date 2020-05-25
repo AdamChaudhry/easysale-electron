@@ -282,6 +282,7 @@
     "electron-log": "^4.0.6",
     "electron-updater": "^4.2.0",
     "history": "^4.10.1",
+    "less": "^3.11.1",
     "less-loader": "^6.1.0",
     "lodash": "^4.17.15",
     "mongoose": "^5.9.15",
