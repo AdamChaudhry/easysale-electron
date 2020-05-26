@@ -6,6 +6,7 @@ import DashboardPage from '../pages/DashboardPage';
 import ProductPage from '../pages/ProductPage';
 import CategoryPage from '../pages/CategoryPage';
 import ManufacturerPage from '../pages/ManufacturerPage';
+import SalePage from '../pages/SalePage';
 
 
 const ContainerRoute = ({ component: Component, ...rest }) => (
@@ -25,6 +26,7 @@ class AppRoute extends React.Component {
           <ContainerRoute path="/product" component={ProductPage} />
           <ContainerRoute path="/category" component={CategoryPage} />
           <ContainerRoute path="/manufacturer" component={ManufacturerPage} />
+          <ContainerRoute path="/sale" component={SalePage} />
           <Redirect from='*' to='/not-found' />
         </Switch>
       </AppLayout>

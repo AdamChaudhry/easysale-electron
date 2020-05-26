@@ -37,7 +37,9 @@ const DashboardHeader = () => {
               <span>Sale</span>
             </span>
           }>
-          <Item key="3">Sale History</Item>
+          <Item key="#/sale">
+            <Link to='/sale'>Sale History</Link>
+          </Item>
           <Item key="4">Sale on Hold</Item>
         </SubMenu>
         <SubMenu
