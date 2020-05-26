@@ -75,7 +75,9 @@ const DashboardHeader = () => {
             </span>
           }>
           <Item key="12">New Category</Item>
-          <Item key="13">Category List</Item>
+          <Item key="#/category">
+            <Link to='/category'>Category List</Link>
+          </Item>
           <Item key="14">Import Category</Item>
         </SubMenu>
         <SubMenu
