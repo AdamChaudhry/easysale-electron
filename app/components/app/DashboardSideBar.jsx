@@ -89,7 +89,9 @@ const DashboardHeader = () => {
             </span>
           }>
           <Item key="16">New Manufacturer</Item>
-          <Item key="17">Manufacturer List</Item>
+          <Item key="#/manufacturer">
+            <Link to='/manufacturer'>Manufacturer List</Link>
+          </Item>
           <Item key="18">Import Manufacturer</Item>
         </SubMenu>
         <SubMenu
