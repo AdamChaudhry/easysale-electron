@@ -69,26 +69,26 @@ export default merge.smart(baseConfig, {
           }
         ]
       },
-      // {
-      //   test: /\.less$/,
-      //   use: [{
-      //     loader: 'style-loader',
-      //   }, {
-      //     loader: 'css-loader', // translates CSS into CommonJS
-      //   }, {
-      //     loader: 'less-loader', // compiles Less to CSS
-      //     options: {
-      //       lessOptions: { // If you are using less-loader@5 please spread the lessOptions to options directly
-      //         modifyVars: {
-      //           'primary-color': '#e6315a',
-      //           'link-color': '#e6315a',
-      //           'border-radius-base': '2px',
-      //         },
-      //         javascriptEnabled: true,
-      //       },
-      //     },
-      //   }],
-      // },
+      {
+        test: /\.less$/,
+        use: [{
+          loader:  MiniCssExtractPlugin.loader,
+        }, {
+          loader: 'css-loader', // translates CSS into CommonJS
+        }, {
+          loader: 'less-loader', // compiles Less to CSS
+          options: {
+            lessOptions: { // If you are using less-loader@5 please spread the lessOptions to options directly
+              modifyVars: {
+                'primary-color': '#e6315a',
+                'link-color': '#e6315a',
+                'border-radius-base': '2px',
+              },
+              javascriptEnabled: true,
+            },
+          },
+        }],
+      },
       // Add SASS support  - compile all .global.scss files and pipe it to style.css
       {
         test: /\.global\.(scss|sass)$/,
