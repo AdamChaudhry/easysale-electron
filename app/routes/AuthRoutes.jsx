@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import AuthLayout from '../layouts/AuthLayout';
 import LoginPage from '../pages/LoginPage';
+import InitialLoginPage from '../pages/InitialLoginPage';
 
 const ContainerRoute = ({ component: Component, ...rest }) => (
   <Route {...rest} render={props => <Component {...props} />} />
@@ -9,11 +10,6 @@ const ContainerRoute = ({ component: Component, ...rest }) => (
 
 class AuthRoute extends React.Component {
   render() {
-    console.log(
-      '...........................',
-      'in auth routes',
-      window.location.href
-    );
     return (
       <AuthLayout>
         <Switch>
@@ -21,6 +17,7 @@ class AuthRoute extends React.Component {
             <Redirect to="/login" />
           </Route>
           <ContainerRoute path="/auth/login" component={LoginPage} />
+          <ContainerRoute path="/auth/initial-login" component={InitialLoginPage} />
           <Redirect from="*" to="/not-found" />
         </Switch>
       </AuthLayout>

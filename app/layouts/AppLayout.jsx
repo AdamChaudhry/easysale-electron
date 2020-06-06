@@ -1,10 +1,8 @@
 import React from 'react';
 import { Layout } from 'antd';
-
+import DashboardSideBar from '../components/app/DashboardSideBar';
 const { Sider, Content } = Layout;
 
-import DashboardHeader from '../components/app/DashboardHeader';
-import DashboardSideBar from '../components/app/DashboardSideBar';
 
 const AppLayout = ({ children }) => {
   return (
@@ -13,7 +11,6 @@ const AppLayout = ({ children }) => {
         <DashboardSideBar />
       </Sider>
       <Layout>
-        {/* <DashboardHeader /> */}
         <Content style={{ margin: '10px' }}>{children}</Content>
       </Layout>
     </Layout>

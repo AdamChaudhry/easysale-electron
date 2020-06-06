@@ -20,7 +20,7 @@ class AppRoute extends React.Component {
       <AppLayout>
         <Switch>
           <Route exact path="/">
-            <Redirect to="/dashboard" />
+            <Redirect to="/auth/login" />
           </Route>
           <ContainerRoute path="/dashboard" component={DashboardPage} />
           <ContainerRoute path="/product" component={ProductPage} />
