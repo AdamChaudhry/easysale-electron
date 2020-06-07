@@ -69,6 +69,8 @@ const createWindow = async () => {
           }
   });
 
+  mainWindow.setFullScreen(true);
+
   mainWindow.webContents.toggleDevTools();
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);

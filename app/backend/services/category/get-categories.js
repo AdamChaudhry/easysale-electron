@@ -13,12 +13,7 @@ const getCategories = async ({ filter, skip = 0, limit = 25 }) => {
   const categories = await Category.aggregate([
     { $match: match },
     { $skip: skip },
-    { $limit: limit },
-    // {
-    //   $project: {
-
-    //   }
-    // }
+    { $limit: limit }
   ]);
 
   return { categories, total };

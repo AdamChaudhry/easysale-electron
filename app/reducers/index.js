@@ -5,6 +5,7 @@ import products from './products';
 import categories from './category';
 import manufacturers from './manufacturer';
 import saleHistory from './saleHistory';
+import auth from './auth';
 
 export default function createRootReducer(history) {
   return combineReducers({
@@ -12,6 +13,7 @@ export default function createRootReducer(history) {
     products,
     categories,
     manufacturers,
-    saleHistory
+    saleHistory,
+    auth
   });
 }

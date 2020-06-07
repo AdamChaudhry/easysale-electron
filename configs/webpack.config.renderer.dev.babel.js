@@ -105,8 +105,8 @@ export default merge.smart(baseConfig, {
           options: {
             lessOptions: { // If you are using less-loader@5 please spread the lessOptions to options directly
               modifyVars: {
-                'primary-color': '#e6315a',
-                'link-color': '#e6315a',
+                'primary-color': '#1d3557',
+                'link-color': '#1d3557',
                 'border-radius-base': '2px',
               },
               javascriptEnabled: true,
