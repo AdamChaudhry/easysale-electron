@@ -16,12 +16,15 @@ initialState = {
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
+    case 'AUTHENTICATE_USER_REQUEST':
     case 'LOGIN_REQUEST': {
       return {
         ...state,
         loading: ++state.loading
       };
     }
+    case 'AUTHENTICATE_USER_FAILED':
+    case 'AUTHENTICATE_USER_SUCCESS':
     case 'LOGIN_FAILED':
     case 'LOGIN_SUCCESS': {
       return {

@@ -1,7 +1,9 @@
 import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Spin } from 'antd';
 
+import * as actions from '../actions/auth';
 import AuthLayout from '../layouts/AuthLayout';
 import LoginPage from '../pages/LoginPage';
 import InitialLoginPage from '../pages/InitialLoginPage';
@@ -11,15 +13,23 @@ const ContainerRoute = ({ component: Component, ...rest }) => (
 );
 
 class AuthRoute extends React.Component {
+  componentDidMount() {
+    const { token, user, authenticateUser } = this.props;
+    if (token && user) {
+      authenticateUser();
+    }
+  }
+
   render() {
-    const { user, token } = this.props;
-    if (user && token) {
-      return <Redirect to='/dashboard'/>
+    const { loading, user, token } = this.props;
+
+    if (loading) {
+      return (<Spin tip="Loading..." spinning={true} style={{'marginTop': '20%'}}> </Spin>);
     }
 
-    // if (user) {
-    //   return <Redirect to='/auth/login'/>;
-    // }
+    if (user && Object.keys(user).length && token) {
+      return <Redirect to='/dashboard'/>
+    }
 
     return (
       <AuthLayout>
@@ -34,4 +44,4 @@ class AuthRoute extends React.Component {
 }
 
 const mapStateToProps = ({ auth }) => ({ ...auth });
-export default connect(mapStateToProps, null)(AuthRoute);
+export default connect(mapStateToProps, actions)(AuthRoute);

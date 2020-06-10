@@ -22,9 +22,7 @@ const DashboardHeader = () => {
         theme='dark'
         style={{ height: '100%' }}
         selectedKeys={[path]}
-        // openKeys={[`sub-${subKey}`]}
-        mode="inline"
-        inlineCollapsed={true}>
+        mode="inline">
         <Item key="#/dashboard" icon={<LineChartOutlined />}>
           <Link to='/dashboard'>Dashboard</Link>
         </Item>

@@ -17,6 +17,7 @@ import { debounce } from 'lodash';
 
 import * as actions from '../actions/category';
 import CategoryGrid from '../components/Category/grid';
+import AddCategoryModal from '../components/Category/AddCategoryModal';
 
 const { Group } = Input;
 const { Option } = Select;
@@ -91,6 +92,7 @@ class CategoryPage extends Component {
             onShowSizeChange={this.handlePageSizeChange}
           />
         </div>
+        <AddCategoryModal/>
       </div>
     );
   }

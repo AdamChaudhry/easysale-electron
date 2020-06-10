@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Spin } from 'antd';
 
+import * as actions from '../actions/auth';
 import AppLayout from '../layouts/AppLayout';
 import DashboardPage from '../pages/DashboardPage';
 import ProductPage from '../pages/ProductPage';
@@ -13,14 +16,34 @@ const ContainerRoute = ({ component: Component, ...rest }) => (
   <Route {...rest} render={(props) => <Component {...props} />} />
 );
 
-class AppRoute extends React.Component {
+class AppRoute extends Component {
+  componentDidMount() {
+    const { token, authenticateUser } = this.props;
+    if (token) {
+      authenticateUser();
+    }
+  }
 
   render() {
+    const { loading, token, user } = this.props;
+    if (loading) {
+      return (<Spin tip="Loading..." spinning={true} style={{'marginTop': '20%'}}> </Spin>);
+    }
+
+    if (user && Object.keys(user).length && !token) {
+      return <Redirect to='/auth/login'/>
+    }
+
+    if (!token) {
+      return <Redirect to='/auth/initial-login'/>
+    }
+
+
     return (
       <AppLayout>
         <Switch>
           <Route exact path="/">
-            <Redirect to="/auth/login" />
+            <Redirect to="/dashboard" />
           </Route>
           <ContainerRoute path="/dashboard" component={DashboardPage} />
           <ContainerRoute path="/product" component={ProductPage} />
@@ -34,4 +57,5 @@ class AppRoute extends React.Component {
   }
 }
 
-export default AppRoute;
+const mapStateToProps = ({ auth }) => ({ ...auth });
+export default connect(mapStateToProps , actions)(AppRoute);

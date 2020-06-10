@@ -1,7 +1,9 @@
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 import keytar from 'keytar';
+
 import { User } from '../../models';
+import { SECRET } from '../../config/setting.json';
 
 const login = async ({ email, password }) => {
   const user = await User.findOne({
@@ -23,8 +25,8 @@ const login = async ({ email, password }) => {
 
   if (!user) throw new Error('INVALID_CREDENTIALS');
 
-  const token = jwt.sign(user, 'shhhhh');
-  await keytar.setPassword('easysale', user.email, token);
+  const token = jwt.sign(user, SECRET);
+  await keytar.setPassword('easysale', user.Email, token);
   return { user, token };
 };
 
