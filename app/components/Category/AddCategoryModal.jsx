@@ -11,10 +11,13 @@ const formItem = {
 }
 
 export default ({
-
+  onSubmit,
+  isVisible,
+  onClose
 }) => {
   const [imageUrl, setImageUrl] = useState();
   const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm();
 
   const uploadButton = (
     <div>
@@ -23,26 +26,52 @@ export default ({
     </div>
   );
 
+
+  const handleOnChangeFile = ({ file }) => {
+    const { originFileObj } = file || {};
+
+    const reader = new FileReader();
+    reader.readAsDataURL(originFileObj);
+
+    reader.onload = () => {
+      setImageUrl(reader.result);
+    };
+
+    reader.onerror = (error) => {
+      console.log('Error: ', error);
+    };
+  }
+
+  const handleSubmit = () => {
+    form.validateFields()
+      .then(({ name, code, description }) => onsubmit({ name, code, description, imageUrl }))
+      .catch(() => {});
+  }
+
   return (
     <div>
       <Modal
         title='Add Category'
-        visible={true}>
+        visible={isVisible}
+        onOk={handleSubmit}
+        onCancel={onClose}>
           <Upload
             listType="picture-card"
             className="avatar-uploader"
+            onChange={handleOnChangeFile}
             showUploadList={false}>
             {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
           </Upload>
           <Form
             layout='vertical'
             colon={false}
-            hideRequiredMark={true}>
+            hideRequiredMark={true}
+            form={form}>
             <Form.Item
               {...formItem}
               label='Name'
               name='name'
-              required={true}>
+              rules={[ { required: true, message: 'Enter category name' } ]}>
               <Input
                 placeholder='Enter name'
               />

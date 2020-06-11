@@ -6,6 +6,9 @@ const initialState = {
   pagination: {
     pageNo: 1,
     pageSize: 25
+  },
+  newCategory: {
+    loading: 0
   }
 };
 
@@ -40,6 +43,25 @@ const boxes = (state = initialState, action) => {
         ...state,
         ...action.payload
       }
+    }
+    case 'SAVE_CATEGORY_REQUEST': {
+      return {
+        ...state,
+        newCategory: {
+          ...state.newCategory,
+          oading: ++state.newCategory.loading
+        }
+      };
+    }
+    case 'SAVE_CATEGORY_FAILED':
+    case 'SAVE_CATEGORY_SUCCESS': {
+      return {
+        ...state,
+        newCategory: {
+          ...state.newCategory,
+          oading: --state.newCategory.loading
+        }
+      };
     }
     default: {
       return state;

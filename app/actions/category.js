@@ -51,3 +51,34 @@ export const setPageSize = ({ pageSize }) => (dispatch) => {
     payload: { pageSize }
   });
 };
+
+export const saveCategory = ({
+  name,
+  code,
+  description,
+  imageUrl
+}) => (dispatch, getState) => {
+  const { auth } = getState();
+  const { token } = auth || {};
+
+  dispatch({ type: 'SAVE_CATEGORY_REQUEST' });
+
+  ipcRenderer
+    .invoke('SAVE_CATEGORY', {
+      token,
+      name,
+      code,
+      description,
+      imageUrl
+    })
+    .then(data => {
+      const { categories: filterCategory, total } = data || {};
+      return dispatch({
+        type: 'SAVE_CATEGORY_SUCCESS',
+        payload: { categories: filterCategory, total }
+      });
+    })
+    .catch(() => {
+      dispatch({ type: 'SAVE_CATEGORY_FAILED' });
+    });
+};

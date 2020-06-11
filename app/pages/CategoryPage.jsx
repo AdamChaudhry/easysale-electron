@@ -23,6 +23,10 @@ const { Group } = Input;
 const { Option } = Select;
 
 class CategoryPage extends Component {
+  state = {
+    isCategoryModalOpen: false
+  }
+
   componentDidMount() {
     const { getCategories } = this.props;
     getCategories();
@@ -52,9 +56,15 @@ class CategoryPage extends Component {
     getCategories();
   }
 
+  handleSubmitCategory = ({ name, code, description, imageUrl }) => {
+
+  }
+
   render() {
     const { total, pagination } = this.props;
     const { pageNo, pageSize } = pagination || {};
+
+    const { isCategoryModalOpen } = this.state;
 
     return (
       <div style={{ height: 'calc(100% - 95px)'}}>
@@ -69,14 +79,20 @@ class CategoryPage extends Component {
             <Input
               key="1"
               width={200}
-              style={{ width: '150px', marginRight: '5px' }}
+              style={{ width: '150px' }}
               placeholder="Search"
               allowClear
               onChange={(e) => {
                 e.persist();
                 this.handleSetKeyword(e);
               }}
-            />
+            />,
+            <Button
+              key='2'
+              type='primary'
+              onClick={() => this.setState({ isCategoryModalOpen: true })}>
+              Add Category
+            </Button>
           ]}
         />
        <CategoryGrid {...this.props}/>
@@ -92,7 +108,11 @@ class CategoryPage extends Component {
             onShowSizeChange={this.handlePageSizeChange}
           />
         </div>
-        <AddCategoryModal/>
+        <AddCategoryModal
+          isVisible={isCategoryModalOpen}
+          onClose={() => this.setState({ isCategoryModalOpen: false })}
+          onSubmit={this.handleSubmitCategory}
+        />
       </div>
     );
   }
