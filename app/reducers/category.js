@@ -49,7 +49,7 @@ const boxes = (state = initialState, action) => {
         ...state,
         newCategory: {
           ...state.newCategory,
-          oading: ++state.newCategory.loading
+          loading: ++state.newCategory.loading
         }
       };
     }
@@ -59,7 +59,7 @@ const boxes = (state = initialState, action) => {
         ...state,
         newCategory: {
           ...state.newCategory,
-          oading: --state.newCategory.loading
+          loading: --state.newCategory.loading
         }
       };
     }
