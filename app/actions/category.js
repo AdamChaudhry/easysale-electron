@@ -72,13 +72,16 @@ export const saveCategory = ({
       imageUrl
     })
     .then(data => {
-      const { categories: filterCategory, total } = data || {};
-      return dispatch({
-        type: 'SAVE_CATEGORY_SUCCESS',
-        payload: { categories: filterCategory, total }
-      });
+      const { error } = data || {};
+      if (error) throw new Error(error);
+
+      dispatch({ type: 'SAVE_CATEGORY_SUCCESS' });
+
+      return { isAdded: true };
     })
-    .catch(() => {
+    .catch((error) => {
       dispatch({ type: 'SAVE_CATEGORY_FAILED' });
+
+      return { error };
     });
 };

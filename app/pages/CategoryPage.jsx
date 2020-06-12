@@ -57,7 +57,8 @@ class CategoryPage extends Component {
   }
 
   handleSubmitCategory = ({ name, code, description, imageUrl }) => {
-
+    const { saveCategory } = this.props;
+    saveCategory({ name, code, description, imageUrl });
   }
 
   render() {

@@ -44,7 +44,8 @@ export default ({
 
   const handleSubmit = () => {
     form.validateFields()
-      .then(({ name, code, description }) => onsubmit({ name, code, description, imageUrl }))
+      .then(({ name, code, description }) =>
+        onSubmit({ name, code, description, imageUrl }))
       .catch(() => {});
   }
 
