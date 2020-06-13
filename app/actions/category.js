@@ -1,4 +1,5 @@
 import { ipcRenderer } from 'electron';
+import { notification } from 'antd';
 
 export const getCategories = () => (dispatch, getState) => {
   const { categories } = getState();
@@ -63,7 +64,7 @@ export const saveCategory = ({
 
   dispatch({ type: 'SAVE_CATEGORY_REQUEST' });
 
-  ipcRenderer
+  return ipcRenderer
     .invoke('SAVE_CATEGORY', {
       token,
       name,
@@ -77,11 +78,61 @@ export const saveCategory = ({
 
       dispatch({ type: 'SAVE_CATEGORY_SUCCESS' });
 
+      notification.success({
+        message: 'Save Category',
+        description: 'Category has been saved successfully',
+        placement: 'bottomRight'
+      });
+
       return { isAdded: true };
     })
     .catch((error) => {
+      notification.error({
+        message: 'Save Category',
+        description: error.message,
+        placement: 'bottomRight'
+      });
+
       dispatch({ type: 'SAVE_CATEGORY_FAILED' });
 
       return { error };
     });
 };
+
+export const deleteCategory = ({ id }) => (dispatch, getState) => {
+  const { auth } = getState();
+  const { token } = auth || {};
+
+  dispatch({ type: 'DELETE_CATEGORY_REQUEST' });
+
+  return ipcRenderer
+    .invoke('DELETE_CATEGORY', {
+      token,
+      id
+    })
+    .then(data => {
+      const { error } = data || {};
+      if (error) throw new Error(error);
+
+      dispatch({ type: 'DELETE_CATEGORY_SUCCESS' });
+
+      notification.success({
+        message: 'Delete Category',
+        description: 'Category has been deleted successfully',
+        placement: 'bottomRight'
+      });
+
+      return { isDeleted: true };
+    })
+    .catch((error) => {
+      notification.error({
+        message: 'Delete Category',
+        description: error.message,
+        placement: 'bottomRight'
+      });
+
+      dispatch({ type: 'DELETE_CATEGORY_FAILED' });
+
+      return { error: error.message };
+    });
+  }

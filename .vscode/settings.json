@@ -8,8 +8,9 @@
     ".eslintignore": "ignore"
   },
 
-  "javascript.validate.enable": false,
-  "javascript.format.enable": false,
+  "javascript.format.insertSpaceAfterCommaDelimiter": true,
+  "javascript.validate.enable": true,
+  "javascript.format.enable": true,
   "typescript.format.enable": false,
 
   "search.exclude": {

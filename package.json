@@ -287,6 +287,7 @@
     "less-loader": "^6.1.0",
     "lodash": "^4.17.15",
     "mongoose": "^5.9.15",
+    "mongoose-lean-getters": "^0.1.2",
     "password-hash": "^1.2.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",

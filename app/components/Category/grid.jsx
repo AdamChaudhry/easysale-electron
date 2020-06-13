@@ -4,7 +4,8 @@ import {
   Button,
   Input,
   Spin,
-  Tooltip
+  Tooltip,
+  Popconfirm
 } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import moment from 'moment';
@@ -49,6 +50,8 @@ class ProductGrid extends Component {
       width: 90,
       pinned: 'right',
       cellRendererFramework: ({ data }) => {
+        const { deleteCategory, getCategories } = this.props;
+        const { _id } = data;
         return (
           <div
             style={{
@@ -64,12 +67,18 @@ class ProductGrid extends Component {
                   icon={<EditOutlined />}
                 />
               </Tooltip>
-              <Tooltip title='Delete'>
-                <Button
-                  size="small"
-                  icon={<DeleteOutlined />
-                }/>
-              </Tooltip>
+              <Popconfirm
+                title='Do you want to delete this category?'
+                placement='left'
+                onConfirm={() => deleteCategory({ id: _id }).then(() => getCategories())}
+                okText='Delete'>
+                <Tooltip title='Delete'>
+                  <Button
+                    size="small"
+                    icon={<DeleteOutlined />}
+                  />
+                </Tooltip>
+              </Popconfirm>
             </Group>
           </div>
         );

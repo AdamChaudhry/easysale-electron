@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron';
-import { getCategoryForFilter, getCategories, saveCategory } from '../services/category';
+import { getCategoryForFilter, getCategories, saveCategory, deleteCategory } from '../services/category';
 import authenticateUser from '../services/auth/authenticateUser'
 
 ipcMain.handle('GET_CATEGORIES_FOR_FILTER', async (event) => {
@@ -16,4 +16,11 @@ ipcMain.handle('SAVE_CATEGORY', async (event, { token, ...rest }) => {
   if (error) return { error };
 
   return await saveCategory({ user, ...rest });
+});
+
+ipcMain.handle('DELETE_CATEGORY', async (event, { token, ...rest }) => {
+  const { user, error } = await authenticateUser({ token });
+  if (error) return { error };
+
+  return await deleteCategory({ user, ...rest });
 });

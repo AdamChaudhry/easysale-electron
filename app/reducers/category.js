@@ -14,12 +14,15 @@ const initialState = {
 
 const boxes = (state = initialState, action) => {
   switch (action.type) {
+    case 'DELETE_CATEGORY_REQUEST':
     case 'GET_CATEGORY_REQUEST': {
       return {
         ...state,
         loading: ++state.loading
       };
     }
+    case 'DELETE_CATEGORY_FAILED':
+    case 'DELETE_CATEGORY_SUCCESS':
     case 'GET_CATEGORY_FAILED':
     case 'GET_CATEGORY_SUCCESS': {
       return {

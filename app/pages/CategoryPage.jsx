@@ -56,9 +56,14 @@ class CategoryPage extends Component {
     getCategories();
   }
 
-  handleSubmitCategory = ({ name, code, description, imageUrl }) => {
-    const { saveCategory } = this.props;
-    saveCategory({ name, code, description, imageUrl });
+  handleSubmitCategory = ({ name, code, description, imageUrl, resetFields }) => {
+    const { saveCategory, getCategories } = this.props;
+    saveCategory({ name, code, description, imageUrl }).then(({ isAdded }) => {
+      if (!isAdded) return;
+      resetFields();
+      this.setState({ isCategoryModalOpen: false });
+      getCategories();
+    })
   }
 
   render() {

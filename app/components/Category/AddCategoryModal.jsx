@@ -18,6 +18,7 @@ export default ({
   const [imageUrl, setImageUrl] = useState();
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
+  const { validateFields, resetFields } = form;
 
   const uploadButton = (
     <div>
@@ -43,9 +44,9 @@ export default ({
   }
 
   const handleSubmit = () => {
-    form.validateFields()
+    validateFields()
       .then(({ name, code, description }) =>
-        onSubmit({ name, code, description, imageUrl }))
+        onSubmit({ name, code, description, imageUrl, resetFields }))
       .catch(() => {});
   }
 
@@ -55,7 +56,10 @@ export default ({
         title='Add Category'
         visible={isVisible}
         onOk={handleSubmit}
-        onCancel={onClose}>
+        onCancel={() => {
+            onClose();
+            resetFields();
+          }}>
           <Upload
             listType="picture-card"
             className="avatar-uploader"

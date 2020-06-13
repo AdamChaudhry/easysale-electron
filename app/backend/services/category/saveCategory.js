@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { Category } from '../../models';
 
 const saveCategory = async ({
@@ -7,6 +8,15 @@ const saveCategory = async ({
   description,
   imageUrl
 }) => {
+
+  // if (imageUrl) {
+  //   const path = `${process.cwd()}/categoey)`;
+  //   if (!fs.existsSync(path)) {
+  //     fs.mkdirSync(path);
+  //   }
+  //   const base64Image = imageUrl.split(';base64,').pop();
+  //   await fs.writeFile(`${process.cwd()}/categoey/${Date.now()}.png`, base64Image, { encoding: 'base64' },  (err) => console.error(err));
+  // }
 
   try {
     const category = new Category({
