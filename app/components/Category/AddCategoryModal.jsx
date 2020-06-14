@@ -12,8 +12,11 @@ const formItem = {
 
 export default ({
   onSubmit,
-  isVisible,
-  onClose
+  onClose,
+  name,
+  code,
+  description,
+  ...rest
 }) => {
   const [imageUrl, setImageUrl] = useState();
   const [loading, setLoading] = useState(false);
@@ -53,13 +56,13 @@ export default ({
   return (
     <div>
       <Modal
-        title='Add Category'
-        visible={isVisible}
+        {...rest}
         onOk={handleSubmit}
+        destroyOnClose={true}
         onCancel={() => {
-            onClose();
-            resetFields();
-          }}>
+          onClose();
+          resetFields();
+        }}>
           <Upload
             listType="picture-card"
             className="avatar-uploader"
@@ -71,23 +74,24 @@ export default ({
             layout='vertical'
             colon={false}
             hideRequiredMark={true}
+            fields={[
+              { name: ['code'], value: code },
+              { name: ['name'], value: name },
+              { name: ['description'], value: description }
+            ]}
             form={form}>
             <Form.Item
               {...formItem}
               label='Name'
               name='name'
               rules={[ { required: true, message: 'Enter category name' } ]}>
-              <Input
-                placeholder='Enter name'
-              />
+              <Input placeholder='Enter name'/>
             </Form.Item>
             <Form.Item
               {...formItem}
               label='Code'
               name='code'>
-              <Input
-                placeholder='Enter unique category code'
-              />
+              <Input placeholder='Enter unique category code' />
             </Form.Item>
             <Form.Item
               {...formItem}

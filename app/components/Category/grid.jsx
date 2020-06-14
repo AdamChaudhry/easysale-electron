@@ -50,7 +50,7 @@ class ProductGrid extends Component {
       width: 90,
       pinned: 'right',
       cellRendererFramework: ({ data }) => {
-        const { deleteCategory, getCategories } = this.props;
+        const { deleteCategory, getCategories, onClickEdit } = this.props;
         const { _id } = data;
         return (
           <div
@@ -64,6 +64,7 @@ class ProductGrid extends Component {
               <Tooltip title="Edit">
                 <Button
                   size="small"
+                  onClick={() => onClickEdit({ data })}
                   icon={<EditOutlined />}
                 />
               </Tooltip>

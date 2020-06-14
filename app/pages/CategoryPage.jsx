@@ -22,10 +22,17 @@ import AddCategoryModal from '../components/Category/AddCategoryModal';
 const { Group } = Input;
 const { Option } = Select;
 
+const initialStats = {
+  isCategoryModalOpen: false,
+  isEditable: false,
+  selectedRow: {}
+}
 class CategoryPage extends Component {
   state = {
-    isCategoryModalOpen: false
-  }
+    isCategoryModalOpen: false,
+    isEditable: false,
+    selectedRow: {}
+  };
 
   componentDidMount() {
     const { getCategories } = this.props;
@@ -57,20 +64,44 @@ class CategoryPage extends Component {
   }
 
   handleSubmitCategory = ({ name, code, description, imageUrl, resetFields }) => {
-    const { saveCategory, getCategories } = this.props;
-    saveCategory({ name, code, description, imageUrl }).then(({ isAdded }) => {
+    const { saveCategory, getCategories, updateCategory } = this.props;
+    const { isEditable, selectedRow } = this.state;
+    const { _id } = selectedRow || {};
+
+    const handlePostChange = ({ isAdded }) => {
       if (!isAdded) return;
       resetFields();
-      this.setState({ isCategoryModalOpen: false });
+      this.setDefaultState();
       getCategories();
-    })
+    };
+
+    isEditable
+      ? updateCategory({ id: _id, name, code, description, imageUrl }).then(handlePostChange)
+      : saveCategory({ name, code, description, imageUrl }).then(handlePostChange);
+  }
+
+  setDefaultState = () => {
+    this.setState({
+      isCategoryModalOpen: false,
+      isEditable: false,
+      selectedRow: {}
+    });
+  }
+
+  handleEditCategory = ({ data }) => {
+    this.setState({
+      isCategoryModalOpen: true,
+      isEditable: true,
+      selectedRow: data
+    });
   }
 
   render() {
     const { total, pagination } = this.props;
     const { pageNo, pageSize } = pagination || {};
 
-    const { isCategoryModalOpen } = this.state;
+    const { isCategoryModalOpen, isEditable, selectedRow } = this.state;
+    const { Name, Code, Description } = selectedRow || {};
 
     return (
       <div style={{ height: 'calc(100% - 95px)'}}>
@@ -101,7 +132,10 @@ class CategoryPage extends Component {
             </Button>
           ]}
         />
-       <CategoryGrid {...this.props}/>
+       <CategoryGrid
+        {...this.props}
+        onClickEdit={this.handleEditCategory}
+      />
         <div style={{ padding: '5px 0px', float: 'right' }}>
           <Pagination
             showSizeChanger
@@ -115,8 +149,13 @@ class CategoryPage extends Component {
           />
         </div>
         <AddCategoryModal
-          isVisible={isCategoryModalOpen}
-          onClose={() => this.setState({ isCategoryModalOpen: false })}
+          title={isEditable ? 'Update Category' : 'Add Category'}
+          okText={isEditable ? 'Update': 'Save' }
+          visible={isCategoryModalOpen}
+          name={Name}
+          code={Code}
+          description={Description}
+          onClose={() => this.setDefaultState()}
           onSubmit={this.handleSubmitCategory}
         />
       </div>

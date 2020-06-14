@@ -49,15 +49,10 @@ const getProducts = async ({ filter, skip = 0, limit = 25 }) => {
         path: '$Manufacturer',
         preserveNullAndEmptyArrays: true
       }
-    },
-    // {
-    //   $project: {
-
-    //   }
-    // }
+    }
   ]);
 
-  return { products, total };
+  return { products: JSON.parse(JSON.stringify(products)), total };
 };
 
 export default getProducts;

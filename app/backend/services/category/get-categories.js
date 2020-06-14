@@ -10,14 +10,13 @@ const getCategories = async ({ filter, skip = 0, limit = 25 }) => {
   }
 
   const total = await Category.countDocuments(match);
-  const categories = await Category
-    .find(match)
-    .skip(skip)
-    .limit(limit)
-    .lean({ getters: true })
-    .exec();
+  const categories = await Category.aggregate([
+    { $match: match },
+    { $skip: skip },
+    { $limit: limit }
+  ]);
 
-  return { categories, total };
+  return { categories: JSON.parse(JSON.stringify(categories)), total };
 };
 
 export default getCategories;

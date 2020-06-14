@@ -136,3 +136,51 @@ export const deleteCategory = ({ id }) => (dispatch, getState) => {
       return { error: error.message };
     });
   }
+
+  export const updateCategory = ({
+    id,
+    name,
+    code,
+    description,
+    imageUrl
+  }) => (dispatch, getState) => {
+    const { auth } = getState();
+    const { token } = auth || {};
+
+    dispatch({ type: 'UPDATE_CATEGORY_REQUEST' });
+
+    return ipcRenderer
+      .invoke('UPDATE_CATEGORY', {
+        token,
+        id,
+        name,
+        code,
+        description,
+        imageUrl
+      })
+      .then(data => {
+        const { error } = data || {};
+        if (error) throw new Error(error);
+
+        dispatch({ type: 'UPDATE_CATEGORY_SUCCESS' });
+
+        notification.success({
+          message: 'Update Category',
+          description: 'Category has been updated successfully',
+          placement: 'bottomRight'
+        });
+
+        return { isAdded: true };
+      })
+      .catch((error) => {
+        notification.error({
+          message: 'Update Category',
+          description: error.message,
+          placement: 'bottomRight'
+        });
+
+        dispatch({ type: 'UPDATE_CATEGORY_FAILED' });
+
+        return { error: error.message };
+      });
+    }

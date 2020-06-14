@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-const mongooseLeanGetters = require('mongoose-lean-getters');
 
 const { Schema } = mongoose;
 const ProductSchema = new Schema({
@@ -12,7 +11,5 @@ const ProductSchema = new Schema({
   Type: Number,
   Code: String
 });
-
-ProductSchema.plugin(mongooseLeanGetters);
 
 export default mongoose.model('Product', ProductSchema, 'Product');

@@ -47,6 +47,7 @@ const boxes = (state = initialState, action) => {
         ...action.payload
       }
     }
+    case 'UPDATE_CATEGORY_REQUEST':
     case 'SAVE_CATEGORY_REQUEST': {
       return {
         ...state,
@@ -56,6 +57,8 @@ const boxes = (state = initialState, action) => {
         }
       };
     }
+    case 'UPDATE_CATEGORY_FAILED':
+    case 'UPDATE_CATEGORY_SUCCESS':
     case 'SAVE_CATEGORY_FAILED':
     case 'SAVE_CATEGORY_SUCCESS': {
       return {
