@@ -16,7 +16,7 @@ const getManufacturers = async ({ filter, skip = 0, limit = 25 }) => {
     { $limit: limit }
   ]);
 
-  return { manufacturers, total };
+  return { manufacturers: JSON.parse(JSON.stringify(manufacturers)), total };
 };
 
 export default getManufacturers;

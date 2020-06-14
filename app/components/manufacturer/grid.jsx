@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import {
-  Button,
-  Input,
-  Spin,
-  Tooltip
-} from 'antd';
+import { Button, Input, Spin, Tooltip, Popconfirm } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
@@ -49,6 +44,8 @@ class ManufacturerGrid extends Component {
       width: 90,
       pinned: 'right',
       cellRendererFramework: ({ data }) => {
+        const { deleteManufacturer, getManufacturers, onClickEdit } = this.props;
+        const { _id } = data;
         return (
           <div
             style={{
@@ -61,15 +58,22 @@ class ManufacturerGrid extends Component {
               <Tooltip title="Edit">
                 <Button
                   size="small"
+                  onClick={() => onClickEdit({ data })}
                   icon={<EditOutlined />}
                 />
               </Tooltip>
-              <Tooltip title='Delete'>
-                <Button
-                  size="small"
-                  icon={<DeleteOutlined />
-                }/>
-              </Tooltip>
+              <Popconfirm
+                title='Do you want to delete this category?'
+                placement='left'
+                onConfirm={() => deleteManufacturer({ id: _id }).then(() => getManufacturers())}
+                okText='Delete'>
+                <Tooltip title='Delete'>
+                  <Button
+                    size="small"
+                    icon={<DeleteOutlined />}
+                  />
+                </Tooltip>
+              </Popconfirm>
             </Group>
           </div>
         );

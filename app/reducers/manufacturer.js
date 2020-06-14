@@ -6,6 +6,9 @@ const initialState = {
   pagination: {
     pageNo: 1,
     pageSize: 25
+  },
+  newManufacturer: {
+    loading: 0
   }
 };
 
@@ -40,6 +43,28 @@ const boxes = (state = initialState, action) => {
         ...state,
         ...action.payload
       }
+    }
+    case 'UPDATE_MANUFACTURER_REQUEST':
+    case 'SAVE_MANUFACTURER_REQUEST': {
+      return {
+        ...state,
+        newManufacturer: {
+          ...state.newManufacturer,
+          loading: ++state.newManufacturer.loading
+        }
+      };
+    }
+    case 'UPDATE_MANUFACTURER_FAILED':
+    case 'UPDATE_MANUFACTURER_SUCCESS':
+    case 'SAVE_MANUFACTURER_FAILED':
+    case 'SAVE_MANUFACTURER_SUCCESS': {
+      return {
+        ...state,
+        newManufacturer: {
+          ...state.newManufacturer,
+          loading: --state.newManufacturer.loading
+        }
+      };
     }
     default: {
       return state;

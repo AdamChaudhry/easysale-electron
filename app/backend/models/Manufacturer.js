@@ -2,11 +2,21 @@ import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 const manufacturerSchema = new Schema({
-  Name: String,
-  Code: String,
+  Name: {
+    type: String,
+    unique: true
+  },
+  Code: {
+    type: String,
+    unique: true
+  },
   Description: String,
-  ImagePath: String,
-  CreatedAt: Date
+  ImagePath: String
+}, {
+  timestamps: {
+    createdAt: 'CreatedAt',
+    updatedAt: 'UpdatedAt'
+  }
 });
 
 export default mongoose.model('Manufacturer', manufacturerSchema, 'Manufacturer');
