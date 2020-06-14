@@ -78,10 +78,18 @@ class ManufacturerPage extends Component {
   }
 
   handleEditManufacturer = ({ data }) => {
+    const { Name, Code, Description } = data || {};
+
     this.setState({
       isManufacturerModalOpen: true,
       isEditable: true,
       selectedRow: data
+    });
+
+    this.addManufacturer.setValue({
+      name: Name,
+      code: Code,
+      Description: Description
     });
   }
 
@@ -141,11 +149,9 @@ class ManufacturerPage extends Component {
           title={isEditable ? 'Update Manufacturer' : 'Add Manufacturer'}
           okText={isEditable ? 'Update': 'Save' }
           visible={isManufacturerModalOpen}
-          name={Name}
-          code={Code}
-          description={Description}
           onClose={() => this.setState({ ...initialStats })}
           onSubmit={this.handleSubmitManufacturer}
+          ref={(ref) => this.addManufacturer = ref}
         />
       </div>
     );

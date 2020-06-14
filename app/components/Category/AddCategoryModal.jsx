@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, forwardRef, useImperativeHandle } from 'react';
 import { Modal, Form, Input, Upload } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 
@@ -10,18 +10,15 @@ const formItem = {
   }
 }
 
-export default ({
+const AddCategoryModal = ({
   onSubmit,
   onClose,
-  name,
-  code,
-  description,
   ...rest
-}) => {
+}, ref) => {
   const [imageUrl, setImageUrl] = useState();
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
-  const { validateFields, resetFields } = form;
+  const { validateFields, resetFields, setFieldsValue } = form;
 
   const uploadButton = (
     <div>
@@ -53,6 +50,13 @@ export default ({
       .catch(() => {});
   }
 
+  useImperativeHandle(ref, () => ({
+    setValue: ({ name, code, description }) => {
+      setFieldsValue({ name, code, description });
+    }
+  })
+);
+
   return (
     <div>
       <Modal
@@ -74,11 +78,6 @@ export default ({
             layout='vertical'
             colon={false}
             hideRequiredMark={true}
-            fields={[
-              { name: ['code'], value: code },
-              { name: ['name'], value: name },
-              { name: ['description'], value: description }
-            ]}
             form={form}>
             <Form.Item
               {...formItem}
@@ -104,3 +103,5 @@ export default ({
     </div>
   )
 }
+
+export default forwardRef(AddCategoryModal);

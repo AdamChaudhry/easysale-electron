@@ -89,10 +89,18 @@ class CategoryPage extends Component {
   }
 
   handleEditCategory = ({ data }) => {
+    const { Name, Code, Description } = data || {};
+
     this.setState({
       isCategoryModalOpen: true,
       isEditable: true,
       selectedRow: data
+    });
+
+    this.AddCategory.setValue({
+      name: Name,
+      code: Code,
+      Description: Description
     });
   }
 
@@ -152,11 +160,9 @@ class CategoryPage extends Component {
           title={isEditable ? 'Update Category' : 'Add Category'}
           okText={isEditable ? 'Update': 'Save' }
           visible={isCategoryModalOpen}
-          name={Name}
-          code={Code}
-          description={Description}
           onClose={() => this.setDefaultState()}
           onSubmit={this.handleSubmitCategory}
+          ref={(ref) => this.AddCategory = ref}
         />
       </div>
     );
