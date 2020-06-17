@@ -17,6 +17,7 @@ import { debounce } from 'lodash';
 
 import * as actions from '../actions/products';
 import ProductGrid from '../components/product/grid';
+import AddProductModal from '../components/product/AddProductModal';
 
 const { Group } = Input;
 const { Option } = Select;
@@ -122,6 +123,11 @@ class PageProduct extends Component {
               showSearch>
               {manufacturerOptions}
             </Select>,
+            <Button
+              key='4'
+              type='primary'>
+              New Product
+            </Button>
           ]}
         />
        <ProductGrid {...this.props}/>
@@ -137,6 +143,10 @@ class PageProduct extends Component {
             onShowSizeChange={this.handlePageSizeChange}
           />
         </div>
+        <AddProductModal
+          visible={true}
+          title='Add Product'
+        />
       </div>
     );
   }
