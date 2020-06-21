@@ -145,7 +145,9 @@ class PageProduct extends Component {
         </div>
         <AddProductModal
           visible={true}
-          title='Add Product'
+          title='New Product'
+          categories={categories}
+          manufacturers={manufacturers}
         />
       </div>
     );

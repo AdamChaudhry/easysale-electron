@@ -1,0 +1,7 @@
+{
+  "PRODUCT_TYPE": {
+    "STANDARD": 0,
+    "COMBO": 1,
+    "SERVICE": 2
+  }
+}
