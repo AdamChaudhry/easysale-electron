@@ -7,11 +7,14 @@
     ".dockerignore": "ignore",
     ".eslintignore": "ignore"
   },
+  "editor.showUnused": true,
 
   "javascript.format.insertSpaceAfterCommaDelimiter": true,
   "javascript.validate.enable": true,
   "javascript.format.enable": true,
-  "typescript.format.enable": false,
+  "[javascript]": {
+    "editor.showUnused": true
+  },
 
   "search.exclude": {
     ".git": true,

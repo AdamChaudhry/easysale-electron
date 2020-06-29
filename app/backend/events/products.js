@@ -1,9 +1,23 @@
 import { ipcMain } from 'electron';
-import keytar from 'keytar';
-import { getProducts } from '../services/product';
+import { getProducts, getProductsByName, saveProduct } from '../services/product';
+import authenticateUser from '../services/auth/authenticateUser'
 
 ipcMain.handle('GET_PRODUCTS', async (event, data) => {
-    const product = await getProducts(data);
-    return product;
+  const product = await getProducts(data);
+  return product;
+});
+
+ipcMain.handle('GET_PRODUCTS_BY_NAME', async (event, { token, ...rest }) => {
+  const { user, error } = await authenticateUser({ token });
+  if (error) return { error };
+
+  return await getProductsByName({ user, ...rest });
+});
+
+ipcMain.handle('SAVE_PRODUCT', async (event, { token, ...rest }) => {
+  const { user, error } = await authenticateUser({ token });
+  if (error) return { error };
+
+  return await saveProduct({ user, ...rest });
 });
 

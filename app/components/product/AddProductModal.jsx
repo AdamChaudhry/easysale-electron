@@ -1,8 +1,10 @@
 import React, { useState, forwardRef, useImperativeHandle } from 'react';
-import { Modal, Form, Input, Upload, Select, InputNumber, Divider, Spin, AutoComplete, Button, Table } from 'antd';
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { Modal, Form, Input, Upload, Select, InputNumber, Divider, Spin, AutoComplete, Button, Table, Tooltip } from 'antd';
+import { LoadingOutlined, PlusOutlined, SearchOutlined, DeleteOutlined } from '@ant-design/icons';
+import { findIndex } from 'lodash';
 
 import { PRODUCT_TYPE } from '../../config/constants.json';
+import ComboProductForm from './AddCombo';
 
 const { TextArea, Group, Search } = Input;
 const { Option } = Select;
@@ -19,51 +21,7 @@ const addonStyle = {
   cursor: 'default'
 }
 
-const columns = [
-  {
-    title: 'Code'
-  },
-  {
-    title: 'Name'
-  },
-  {
-    title: 'Qty'
-  },
-  {
-    title: 'Actions'
-  }
-];
-
-const ComboProductForm = () => {
-  return (
-    <>
-      <Divider />
-      <div style={{ textAlign: "center" }}>Combo Products</div>
-      <Group compact>
-        <AutoComplete
-          allowClear
-          style={{ width: 'calc(100% - 100px - 60px)' }}
-          placeholder='Search Product'
-        />
-        <InputNumber
-          placeholder='Enter Qty'
-          style={{ width: '100px' }}
-        />
-        <Button
-          style={{ width: '60px' }}
-          type='primary'>
-          Add
-          </Button>
-      </Group>
-      <Table
-        style={{ marginTop: '10px' }}
-        emptyText='Please add Products'
-        columns={columns}
-        size='small'
-      />
-    </>
-  );
-}
+let comboProductForm;
 
 const AddProduct = ({
   onSubmit,
@@ -112,10 +70,11 @@ const AddProduct = ({
   }
 
   const handleSubmit = () => {
-    validateFields()
-      .then(({ name, code, description }) =>
-        onSubmit({ name, code, description, imageUrl, resetFields }))
-      .catch(() => { });
+    validateFields().then((value) => {
+      const comboProducts = comboProductForm && comboProductForm.getComboProducts();
+      onSubmit({ ...value, comboProducts, resetFields })
+    })
+    .catch(() => { });
   }
 
   const handleOnChangeType = (type) => {
@@ -132,6 +91,7 @@ const AddProduct = ({
         onCancel={() => {
           onClose();
           resetFields();
+          setProductType(PRODUCT_TYPE.STANDARD);
         }}>
         <Upload
           listType="picture-card"
@@ -206,7 +166,7 @@ const AddProduct = ({
                   {...formItem}
                   name='category'
                   style={{ ...formItem.style, width: 'calc(100% - 80px)' }}
-                  rules={[{ required: true, message: 'Enter manufacturer name' }]}>
+                  rules={[{ required: true, message: 'Enter Category' }]}>
                   <Select
                     placeholder='Select Category'
                     showSearch
@@ -253,6 +213,7 @@ const AddProduct = ({
                 />
                 <Form.Item
                   {...formItem}
+                  name='price'
                   style={{ ...formItem.style, width: 'calc(100% - 60px)' }}
                   rules={[{ required: true, message: 'Enter Price' }]}>
                   <InputNumber placeholder='Enter Price' style={{ width: '100%' }} />
@@ -289,7 +250,7 @@ const AddProduct = ({
                         name='minQty'
                         {...formItem}
                         style={{ ...formItem.style, width: 'calc(100% - 110px)' }}>
-                        <InputNumber placeholder='Enter Price' style={{ width: '100%' }} />
+                        <InputNumber placeholder='Enter Min Qty' style={{ width: '100%' }} />
                       </Form.Item>
                     </Group>
                   </div>
@@ -303,7 +264,7 @@ const AddProduct = ({
             <TextArea placeholder='Enter Product Description...' />
           </Form.Item>
         </Form>
-        {(productType == PRODUCT_TYPE.COMBO) && <ComboProductForm />}
+        {(productType == PRODUCT_TYPE.COMBO) && <ComboProductForm {...rest} ref={(ref) => comboProductForm = ref} />}
       </Modal>
     </div>
   )

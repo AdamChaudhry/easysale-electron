@@ -1,4 +1,5 @@
 import { ipcRenderer } from 'electron';
+import { notification } from 'antd';
 
 export const getProducts = () => (dispatch, getState) => {
   const { products } = getState();
@@ -82,3 +83,98 @@ export const setPageSize = ({ pageSize }) => (dispatch) => {
     payload: { pageSize }
   });
 };
+
+export const getProductsByName = ({ name }) => (dispatch, getState) => {
+  const { auth } = getState();
+  const { token } = auth || {};
+
+  dispatch({ type: 'GET_PRODUCTS_BY_NAME_REQUEST' });
+
+  return ipcRenderer
+    .invoke('GET_PRODUCTS_BY_NAME', {
+      token,
+      filter: {
+        keyword: name
+      }
+    })
+    .then(data => {
+      const { products, error } = data || {};
+
+      if (error) throw new Error(error);
+      dispatch({
+        type: 'GET_PRODUCTS_BY_NAME_SUCCESS',
+        payload: { products }
+      });
+    })
+    .catch((error) => {
+      notification.error({
+        message: 'GET PRODUCT BY NAME',
+        description: error.message,
+        placement: 'bottomRight'
+      });
+
+      dispatch({ type: 'GET_PRODUCTS_BY_NAME_FAILED' });
+    });
+}
+
+export const saveProduct = ({
+  name,
+  code,
+  type,
+  description,
+  manufacturer,
+  category,
+  price,
+  cost,
+  minQty,
+  imageUrl,
+  comboProducts
+}) => (dispatch, getState) => {
+  const { auth } = getState();
+  const { token } = auth || {};
+
+  dispatch({ type: 'SAVE_PRODUCT_REQUEST' });
+
+  return ipcRenderer
+    .invoke('SAVE_PRODUCT', {
+      token,
+      name,
+      code,
+      type,
+      description,
+      manufacturer,
+      category,
+      price,
+      cost,
+      minQty,
+      imageUrl,
+      comboProducts
+    })
+    .then(data => {
+      const { product, error } = data || {};
+
+      if (error) throw new Error(error);
+      dispatch({
+        type: 'SAVE_PRODUCT_SUCCESS',
+        payload: { product }
+      });
+
+      notification.success({
+        message: 'SAVE PRODUCT',
+        description: 'Product has been saved successgully',
+        placement: 'bottomRight'
+      });
+
+      return { isAdded: true };
+    })
+    .catch((error) => {
+      notification.error({
+        message: 'GET PRODUCT BY NAME',
+        description: error.message,
+        placement: 'bottomRight'
+      });
+
+      dispatch({ type: 'SAVE_PRODUCT_FAILED' });
+      return { error };
+    });
+}

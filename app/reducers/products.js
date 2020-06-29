@@ -8,7 +8,11 @@ const initialState = {
     pageSize: 25
   },
   categories: [],
-  manufacturers: []
+  manufacturers: [],
+  newProduct: {
+    products: [],
+    loading: 0
+  }
 };
 
 const boxes = (state = initialState, action) => {
@@ -39,6 +43,29 @@ const boxes = (state = initialState, action) => {
         ...state,
         pagination: {
           ...state.pagination,
+          ...action.payload
+        }
+      };
+    }
+    case 'SAVE_PRODUCT_REQUEST':
+    case 'GET_PRODUCTS_BY_NAME_REQUEST': {
+      return {
+        ...state,
+        newProduct: {
+          ...state.newProduct,
+          loading: ++state.newProduct.loading
+        }
+      };
+    }
+    case 'SAVE_PRODUCT_FAILED':
+    case 'SAVE_PRODUCT_SUCCESS':
+    case 'GET_PRODUCTS_BY_NAME_FAILED':
+    case 'GET_PRODUCTS_BY_NAME_SUCCESS': {
+      return {
+        ...state,
+        newProduct: {
+          ...state.newProduct,
+          loading: --state.newProduct.loading,
           ...action.payload
         }
       };
