@@ -12,6 +12,10 @@ const initialState = {
   newProduct: {
     products: [],
     loading: 0
+  },
+  editProduct: {
+    comboProducts: [],
+    loadingComboProducts: 0
   }
 };
 
@@ -69,6 +73,26 @@ const boxes = (state = initialState, action) => {
           ...action.payload
         }
       };
+    }
+    case 'GET_COMBO_PRODUCTS_REQUEST': {
+      return {
+        ...state,
+        editProduct: {
+          ...state.editProduct,
+          loadingComboProducts: ++state.editProduct.loadingComboProducts
+        }
+      }
+    }
+    case 'GET_COMBO_PRODUCTS_FAILED':
+    case 'GET_COMBO_PRODUCTS_SUCCESS': {
+      return {
+        ...state,
+        editProduct: {
+          ...state.editProduct,
+          loadingComboProducts: --state.editProduct.loadingComboProducts,
+          ...action.payload
+        }
+      }
     }
     default: {
       return state;

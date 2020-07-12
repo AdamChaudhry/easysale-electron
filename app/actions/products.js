@@ -169,12 +169,45 @@ export const saveProduct = ({
     })
     .catch((error) => {
       notification.error({
-        message: 'GET PRODUCT BY NAME',
+        message: 'SAVE PRODUCT',
         description: error.message,
         placement: 'bottomRight'
       });
 
       dispatch({ type: 'SAVE_PRODUCT_FAILED' });
+      return { error };
+    });
+}
+
+export const getComboProducts = ({ ids }) => (dispatch, getState) => {
+  const { auth } = getState();
+  const { token } = auth || {};
+
+  dispatch({ type: 'GET_COMBO_PRODUCTS_REQUEST' });
+
+  return ipcRenderer
+    .invoke('GET_COMBO_PRODUCTS', {
+      token,
+      ids
+    })
+    .then(data => {
+      const { products, error } = data || {};
+
+      if (error) throw new Error(error);
+      dispatch({
+        type: 'GET_COMBO_PRODUCTS_SUCCESS',
+        payload: { comboProducts: products }
+      });
+      return { products };
+    })
+    .catch((error) => {
+      notification.error({
+        message: 'GET PRODUCT BY NAME',
+        description: error.message,
+        placement: 'bottomRight'
+      });
+
+      dispatch({ type: 'GET_COMBO_PRODUCTS_FAILED' });
       return { error };
     });
 }

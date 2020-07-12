@@ -8,9 +8,11 @@ import {
   Input,
   PageHeader,
   Spin,
-  Tooltip
+  Tooltip,
+  Dropdown,
+  Menu
 } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, ExportOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { debounce } from 'lodash';
@@ -25,7 +27,9 @@ const { Option } = Select;
 
 class PageProduct extends Component {
   state = {
-    isSaveProductModalOpen: false
+    isSaveProductModalOpen: false,
+    isEditable: true,
+    selectedRow: {}
   };
 
   componentDidMount() {
@@ -105,11 +109,32 @@ class PageProduct extends Component {
     })
   }
 
+  handleEditProduct = ({ data }) => {
+    const { getComboProducts } = this.props;
+
+    this.setState({
+      isSaveProductModalOpen: true,
+      isEditable: true,
+      selectedRow: data
+    });
+
+    const { Type, Combo = [] } = data;
+    if (Type == PRODUCT_TYPE.COMBO) {
+      const ids = Combo.map(({ _id }) => _id);
+      getComboProducts({ ids }).then(({ products }) => {
+        this.AddProduct.setComboProducts(products)
+      });
+    }
+
+    this.AddProduct.setValue(data);
+  }
+
   render() {
     const { isSaveProductModalOpen } = this.state;
-    const { products, loading, total, pagination, categories, manufacturers, newProduct } = this.props;
+    const { products, loading, total, pagination, categories, manufacturers, newProduct, editProduct } = this.props;
     const { pageNo, pageSize } = pagination || {};
     const { products: searchedProducts, loading: searchingProducts } = newProduct || {};
+    const { comboProducts, loadingComboProducts } = editProduct || {};
 
     const categoryOptions = categories.map(({ Name, _id }) => <Option key={_id} label={Name}>{Name}</Option>)
     const manufacturerOptions = manufacturers.map(({ Name, _id }) => <Option key={_id} label={Name}>{Name}</Option>)
@@ -154,15 +179,25 @@ class PageProduct extends Component {
               showSearch>
               {manufacturerOptions}
             </Select>,
-            <Button
+            <Dropdown.Button
+              overlay={(
+                <Menu style={{ width: '140px' }}>
+                  <Menu.Item key="1" icon={<ExportOutlined />}>
+                    Export
+                  </Menu.Item>
+                </Menu>
+              )}
               key='4'
-              onClick={() => this.setState({ isSaveProductModalOpen: true })}
-              type='primary'>
+              type='primary'
+              onClick={() => this.setState({ isSaveProductModalOpen: true })}>
               New Product
-            </Button>
+            </Dropdown.Button>
           ]}
         />
-       <ProductGrid {...this.props}/>
+        <ProductGrid
+          {...this.props}
+          onClickEdit={this.handleEditProduct}
+        />
         <div style={{ padding: '5px 0px', float: 'right' }}>
           <Pagination
             showSizeChanger
@@ -186,6 +221,7 @@ class PageProduct extends Component {
           searchingProducts={searchingProducts}
           onSubmit={this.handleSaveProduct}
           onClose={() => this.setState({ isSaveProductModalOpen: false })}
+          ref={(ref) => this.AddProduct = ref}
         />
       </div>
     );

@@ -36,7 +36,7 @@ const AddProduct = ({
 
   const [form] = Form.useForm();
   const { validateFields, resetFields, setFieldsValue, getFieldValue } = form;
-  const categoryOptions = categories.map(({ Name, _id }) => <Option key={_id} label={Name}>{Name}</Option>);
+  const categoryOptions = categories.map(({ Name, _id }) => <Option key={_id} value={_id} label={Name}>{Name}</Option>);
   const manufacturerOptions = manufacturers.map(({ Name, _id }) => <Option key={_id} label={Name}>{Name}</Option>)
 
   const uploadButton = (
@@ -48,8 +48,36 @@ const AddProduct = ({
 
 
   useImperativeHandle(ref, () => ({
-    setValue: ({ name, code, description }) => {
-      setFieldsValue({ name, code, description });
+    setValue: ({
+      Name,
+      Code,
+      Description,
+      Type,
+      CategoryId,
+      ManufacturerId,
+      Price,
+      Cost,
+      MinQty,
+      Combo
+    }) => {
+      setProductType(Type);
+
+      setFieldsValue({
+        name: Name,
+        code: Code,
+        description: Description,
+        type: Type,
+        category: CategoryId,
+        manufacturer: ManufacturerId,
+        price: Price,
+        cost: Cost,
+        minQty: MinQty,
+        description: Description
+      });
+    },
+    setComboProducts: (products) => {
+      console.log('....................', ComboProductForm)
+      ComboProductForm && ComboProductForm.setProducts(products);
     }
   }));
 

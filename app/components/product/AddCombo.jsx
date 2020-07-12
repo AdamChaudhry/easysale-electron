@@ -43,7 +43,10 @@ const ComboProductForm = ({
   }
 
   useImperativeHandle(ref, () => ({
-    getComboProducts: () => comboProducts
+    getComboProducts: () => comboProducts,
+    setProducts: (products = []) => {
+      setComboProducts(products)
+    }
   }));
 
   const columns = [
