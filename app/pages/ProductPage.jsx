@@ -21,6 +21,7 @@ import * as actions from '../actions/products';
 import ProductGrid from '../components/product/grid';
 import AddProductModal from '../components/product/AddProductModal';
 import { PRODUCT_TYPE } from '../config/constants.json';
+import { exportAsXlsx } from '../components/product/export';
 
 const { Group } = Input;
 const { Option } = Select;
@@ -129,6 +130,17 @@ class PageProduct extends Component {
     this.AddProduct.setValue(data);
   }
 
+  handleExportData = () => {
+    const { products } = this.props;
+    const columns = this.ProductGrid
+      .columnApi
+      .getAllColumns()
+      .map(({ colDef }) => colDef)
+      .filter(({ headerName }) => headerName && headerName !== 'Actions');
+
+    exportAsXlsx({ columns, data: products });
+  }
+
   render() {
     const { isSaveProductModalOpen } = this.state;
     const { products, loading, total, pagination, categories, manufacturers, newProduct, editProduct } = this.props;
@@ -182,7 +194,10 @@ class PageProduct extends Component {
             <Dropdown.Button
               overlay={(
                 <Menu style={{ width: '140px' }}>
-                  <Menu.Item key="1" icon={<ExportOutlined />}>
+                  <Menu.Item
+                    key="1"
+                    icon={<ExportOutlined />}
+                    onClick={this.handleExportData}>
                     Export
                   </Menu.Item>
                 </Menu>
@@ -197,6 +212,7 @@ class PageProduct extends Component {
         <ProductGrid
           {...this.props}
           onClickEdit={this.handleEditProduct}
+          ref={(ref) => this.ProductGrid = ref}
         />
         <div style={{ padding: '5px 0px', float: 'right' }}>
           <Pagination

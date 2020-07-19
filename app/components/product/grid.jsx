@@ -121,6 +121,10 @@ class ProductGrid extends Component {
     }
   ];
 
+  onGridReady = (params) => {
+    this.api = params.api;
+    this.columnApi = params.columnApi;
+  }
 
   render() {
     const { products, loading } = this.props;
@@ -133,6 +137,7 @@ class ProductGrid extends Component {
               columnDefs={this.columnDefs}
               rowData={products}
               animateRows={true}
+              onGridReady={this.onGridReady}
             />
           </div>
         </Spin>
