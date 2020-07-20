@@ -131,14 +131,21 @@ class PageProduct extends Component {
   }
 
   handleExportData = () => {
-    const { products } = this.props;
+    const { getExportProducts, categories, manufacturers } = this.props;
     const columns = this.ProductGrid
       .columnApi
       .getAllColumns()
       .map(({ colDef }) => colDef)
       .filter(({ headerName }) => headerName && headerName !== 'Actions');
 
-    exportAsXlsx({ columns, data: products });
+      getExportProducts({}).then(({ products }) => {
+        exportAsXlsx({
+          columns,
+          data: products,
+          categories,
+          manufacturers
+        });
+      });
   }
 
   render() {

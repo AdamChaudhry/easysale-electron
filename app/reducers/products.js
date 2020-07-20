@@ -1,6 +1,7 @@
 const initialState = {
   loading: 0,
   products: [],
+  exportProducts: [],
   total: 0,
   filter: {},
   pagination: {
@@ -21,6 +22,7 @@ const initialState = {
 
 const boxes = (state = initialState, action) => {
   switch (action.type) {
+    case 'GET_EXPORT_PRODUCTS_REQUEST':
     case 'GET_MANUFACTURERS_FOR_PRODUCTS_REQUEST':
     case 'GET_CATEGORIES_FOR_PRODUCTS_REQUEST':
     case 'GET_PRODUCTS_REQUEST': {
@@ -29,6 +31,8 @@ const boxes = (state = initialState, action) => {
         loading: ++state.loading
       };
     }
+    case 'GET_EXPORT_PRODUCTS_FAILED':
+    case 'GET_EXPORT_PRODUCTS_SUCCESS':
     case 'GET_MANUFACTURERS_FOR_PRODUCTS_FAILED':
     case 'GET_MANUFACTURERS_FOR_PRODUCTS_SUCCESS':
     case 'GET_CATEGORIES_FOR_PRODUCTS_FAILED':

@@ -211,3 +211,38 @@ export const getComboProducts = ({ ids }) => (dispatch, getState) => {
       return { error };
     });
 }
+
+export const getExportProducts = ({ ids }) => (dispatch, getState) => {
+  const { auth, products } = getState();
+  const { token } = auth || {};
+
+  const { filter } = products || {};
+
+  dispatch({ type: 'GET_EXPORT_PRODUCTS_REQUEST' });
+
+  return ipcRenderer
+    .invoke('GET_EXPORT_PRODUCTS', {
+      token,
+      filter
+    })
+    .then(data => {
+      const { products, error } = data || {};
+
+      if (error) throw new Error(error);
+      dispatch({
+        type: 'GET_EXPORT_PRODUCTS_SUCCESS',
+        payload: { exportProducts: products }
+      });
+      return { products };
+    })
+    .catch((error) => {
+      notification.error({
+        message: 'EXPORT PRODUCTS',
+        description: error.message,
+        placement: 'bottomRight'
+      });
+
+      dispatch({ type: 'GET_EXPORT_PRODUCTS_FAILED' });
+      return { error };
+    });
+}
