@@ -2,19 +2,15 @@ import mongoose from 'mongoose';
 import { Product } from '../../models';
 
 const getProducts = async ({ user, filter }) => {
-  const { keyword, CategoryId, ManufacturerId } = filter;
-
+  const { ids, names, codes } = filter;
   const match = {};
-  if (keyword) {
-    match.Name = new RegExp(keyword, 'i');
+
+  if (names && names.length) {
+    match.Name = { $in: names };
   }
 
-  if (CategoryId) {
-    match.CategoryId = mongoose.Types.ObjectId(CategoryId);
-  }
-
-  if (ManufacturerId) {
-    match.ManufacturerId = mongoose.Types.ObjectId(ManufacturerId);
+  if (codes && codes.length) {
+    match.Code = { $in: codes };
   }
 
   const products = await Product.aggregate([

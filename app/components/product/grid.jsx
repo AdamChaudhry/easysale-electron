@@ -136,6 +136,9 @@ class ProductGrid extends Component {
             <AgGridReact
               columnDefs={this.columnDefs}
               rowData={products}
+              defaultColDef={{
+                resizable: true
+              }}
               animateRows={true}
               onGridReady={this.onGridReady}
             />

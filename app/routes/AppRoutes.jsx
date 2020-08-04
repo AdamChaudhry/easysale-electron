@@ -7,6 +7,7 @@ import * as actions from '../actions/auth';
 import AppLayout from '../layouts/AppLayout';
 import DashboardPage from '../pages/DashboardPage';
 import ProductPage from '../pages/ProductPage';
+import ImportProductPage from '../pages/ImportProduct';
 import CategoryPage from '../pages/CategoryPage';
 import ManufacturerPage from '../pages/ManufacturerPage';
 import SalePage from '../pages/SalePage';
@@ -47,6 +48,7 @@ class AppRoute extends Component {
           </Route>
           <ContainerRoute path="/dashboard" component={DashboardPage} />
           <ContainerRoute path="/product" component={ProductPage} />
+          <ContainerRoute path="/import-product" component={ImportProductPage} />
           <ContainerRoute path="/category" component={CategoryPage} />
           <ContainerRoute path="/manufacturer" component={ManufacturerPage} />
           <ContainerRoute path="/sale" component={SalePage} />

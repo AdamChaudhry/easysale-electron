@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import shortid from 'shortid';
 
 const { Schema } = mongoose;
 const CategorySchema = new Schema({
@@ -8,7 +9,11 @@ const CategorySchema = new Schema({
   },
   Code: {
     type: String,
-    unique: true
+    unique: true,
+    default: () => {
+      const code = shortid.generate();
+      return `cat-${code}`
+    }
   },
   Description: String,
   ImagePath: String

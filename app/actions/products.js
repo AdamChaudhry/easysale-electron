@@ -29,14 +29,16 @@ export const getProducts = () => (dispatch, getState) => {
 export const getCategory = () => dispatch => {
   dispatch({ type: 'GET_CATEGORIES_FOR_PRODUCTS_REQUEST' });
 
-  ipcRenderer
+  return ipcRenderer
     .invoke('GET_CATEGORIES_FOR_FILTER')
     .then((data) => {
       const { categories } = data || {};
-      return dispatch({
+      dispatch({
         type: 'GET_CATEGORIES_FOR_PRODUCTS_SUCCESS',
         payload: { categories }
       });
+
+      return { categories };
     })
     .catch(() => {
       dispatch({ type: 'GET_CATEGORIES_FOR_PRODUCTS_FAILED' });
@@ -46,14 +48,16 @@ export const getCategory = () => dispatch => {
 export const getManufacturer = () => dispatch => {
   dispatch({ type: 'GET_MANUFACTURERS_FOR_PRODUCTS_REQUEST' });
 
-  ipcRenderer
+  return ipcRenderer
     .invoke('GET_MANUFACTURERS_FOR_FILTER')
     .then((data) => {
       const { manufacturers } = data || {};
-      return dispatch({
+      dispatch({
         type: 'GET_MANUFACTURERS_FOR_PRODUCTS_SUCCESS',
         payload: { manufacturers }
       });
+
+      return { manufacturers };
     })
     .catch(() => {
       dispatch({ type: 'GET_MANUFACTURERS_FOR_PRODUCTS_FAILED' });
@@ -212,18 +216,20 @@ export const getComboProducts = ({ ids }) => (dispatch, getState) => {
     });
 }
 
-export const getExportProducts = ({ ids }) => (dispatch, getState) => {
-  const { auth, products } = getState();
+export const getExportProducts = ({ ids, names, codes }) => (dispatch, getState) => {
+  const { auth } = getState();
   const { token } = auth || {};
-
-  const { filter } = products || {};
 
   dispatch({ type: 'GET_EXPORT_PRODUCTS_REQUEST' });
 
   return ipcRenderer
     .invoke('GET_EXPORT_PRODUCTS', {
       token,
-      filter
+      filter: {
+        ids,
+        names,
+        codes
+      }
     })
     .then(data => {
       const { products, error } = data || {};
@@ -243,6 +249,113 @@ export const getExportProducts = ({ ids }) => (dispatch, getState) => {
       });
 
       dispatch({ type: 'GET_EXPORT_PRODUCTS_FAILED' });
+      return { error };
+    });
+}
+
+export const bulkInsertCategory = ({ newCategories }) => (dispatch, getState) => {
+  const { auth } = getState();
+  const { token } = auth || {};
+
+  dispatch({ type: 'BULK_INSERT_CATEGORIES_FOR_IMPORT_PRODUCTS_REQUEST' });
+
+  return ipcRenderer
+    .invoke('BULK_INSERT_CATEGORIES_FOR_IMPORT_PRODUCTS', {
+      token,
+      categories: newCategories
+    })
+    .then(data => {
+      const { categories, error } = data || {};
+      if (error) throw new Error(error);
+      dispatch({
+        type: 'BULK_INSERT_CATEGORIES_FOR_IMPORT_PRODUCTS_SUCCESS',
+        payload: { categories }
+      });
+
+      return { categories };
+    })
+    .catch((error) => {
+      notification.error({
+        message: 'EXPORT PRODUCTS',
+        description: error.message,
+        placement: 'bottomRight'
+      });
+
+      dispatch({ type: 'BULK_INSERT_CATEGORIES_FOR_IMPORT_PRODUCTS_FAILED' });
+      return { error };
+    });
+}
+
+export const bulkInsertManufacturer = ({ newManufacturers }) => (dispatch, getState) => {
+  const { auth } = getState();
+  const { token } = auth || {};
+
+  dispatch({ type: 'BULK_INSERT_MANUFACTURER_FOR_IMPORT_PRODUCTS_REQUEST' });
+
+  return ipcRenderer
+    .invoke('BULK_INSERT_MANUFACTURER_FOR_IMPORT_PRODUCTS', {
+      token,
+      manufacturers: newManufacturers
+    })
+    .then(data => {
+      const { manufacturers, error } = data || {};
+
+      if (error) throw new Error(error);
+      dispatch({
+        type: 'BULK_INSERT_MANUFACTURER_FOR_IMPORT_PRODUCTS_SUCCESS',
+        payload: { manufacturers }
+      });
+
+      return { manufacturers };
+    })
+    .catch((error) => {
+      notification.error({
+        message: 'EXPORT PRODUCTS',
+        description: error.message,
+        placement: 'bottomRight'
+      });
+
+      dispatch({ type: 'BULK_INSERT_MANUFACTURER_FOR_IMPORT_PRODUCTS_FAILED' });
+      return { error };
+    });
+}
+
+export const bulkInsertProducts = ({ newProducts }) => (dispatch, getState) => {
+  const { auth } = getState();
+  const { token } = auth || {};
+
+  dispatch({ type: 'BULK_INSERT_PRODUCTS_FOR_IMPORT_PRODUCTS_REQUEST' });
+
+  return ipcRenderer
+    .invoke('BULK_INSERT_PRODUCTS_FOR_IMPORT_PRODUCTS', {
+      token,
+      products: newProducts
+    })
+    .then((data) => {
+      const { products, error } = data || {};
+
+      if (error) throw new Error(error);
+      dispatch({
+        type: 'BULK_INSERT_PRODUCTS_FOR_IMPORT_PRODUCTS_SUCCESS',
+        payload: { products }
+      });
+
+      notification.success({
+        message: 'IMPORT PRODUCTS',
+        description: `${newProducts.length} Products have been imported successfully.`,
+        placement: 'bottomRight'
+      });
+
+      return { products };
+    })
+    .catch((error) => {
+      notification.error({
+        message: 'IMPORT PRODUCTS',
+        description: error.message,
+        placement: 'bottomRight'
+      });
+
+      dispatch({ type: 'BULK_INSERT_PRODUCTS_FOR_IMPORT_PRODUCTS_FAILED' });
       return { error };
     });
 }

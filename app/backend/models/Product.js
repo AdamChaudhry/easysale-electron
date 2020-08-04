@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import shortid from 'shortid';
 
 const { Schema } = mongoose;
 const ProductSchema = new Schema({
@@ -9,19 +10,30 @@ const ProductSchema = new Schema({
   Type: { type: Number },
   Code: {
     type: String,
-    unique: true
+    unique: true,
+    default: () => {
+      const code = shortid.generate();
+      return `prod-${code}`
+    }
   },
   CategoryId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category'
+    ref: 'Category',
+    required: true
   },
   ManufacturerId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Manufacturer'
   },
   Stock: {
-    Qty: { type: Number },
-    UpdatedAt: { type: Date },
+    Qty: {
+      type: Number,
+      default: 0
+    },
+    UpdatedAt: {
+      type: Date,
+      default: () => new Date().toISOString()
+    },
     UpdatedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
@@ -32,7 +44,10 @@ const ProductSchema = new Schema({
     required: true
   },
   Cost: { type: Number },
-  MinQty: { type: Number },
+  MinQty: {
+    type: Number,
+    default: 0
+  },
   ImgPath: { type: String },
   Description: { type: String },
   SKU: { type: String },

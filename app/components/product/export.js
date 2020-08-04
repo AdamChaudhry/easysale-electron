@@ -14,7 +14,7 @@ export const exportAsXlsx = ({ columns, data, categories, manufacturers }) => {
         return productTypes[get(dataRow, field)];
       }
       else if (field == 'CreatedAt') {
-        return moment(dataRow[field]).format('LL');
+        return moment(dataRow.CreatedAt).format('LL');
       }
       else if (field == 'Category.Name') {
         const category = categories.find(({ _id }) => _id == dataRow.CategoryId);

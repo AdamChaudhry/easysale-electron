@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron';
-import { getManufacturerForFilter, getManufacturer, saveManufacturer, updateManufacturer, deleteManufacturer } from '../services/manufacturer';
+import { getManufacturerForFilter, getManufacturer, saveManufacturer, updateManufacturer, deleteManufacturer, bulkInsert } from '../services/manufacturer';
 import authenticateUser from '../services/auth/authenticateUser';
 
 ipcMain.handle('GET_MANUFACTURERS_FOR_FILTER', async (event) => {
@@ -30,4 +30,11 @@ ipcMain.handle('UPDATE_MANUFACTURER', async (event, { token, ...rest }) => {
   if (error) return { error };
 
   return await updateManufacturer({ user, ...rest });
+});
+
+ipcMain.handle('BULK_INSERT_MANUFACTURER_FOR_IMPORT_PRODUCTS', async (event, { token, ...rest }) => {
+  const { user, error } = await authenticateUser({ token });
+  if (error) return { error };
+
+  return await bulkInsert({ user, ...rest });
 });

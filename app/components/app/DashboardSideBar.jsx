@@ -62,8 +62,12 @@ const DashboardHeader = () => {
             </span>
           }>
           <Item key="9">New Products</Item>
-          <Item key="#/product">Product List</Item>
-          <Item key="11">Import Products</Item>
+          <Item key="#/product">
+            <Link to='/product'>Product List</Link>
+          </Item>
+          <Item key="#/import-product">
+            <Link to='/import-product'>Import Products</Link>
+          </Item>
         </SubMenu>
         <SubMenu
           key="sub-sub4"
