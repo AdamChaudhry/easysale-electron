@@ -11,6 +11,7 @@ import ImportProductPage from '../pages/ImportProduct';
 import CategoryPage from '../pages/CategoryPage';
 import ManufacturerPage from '../pages/ManufacturerPage';
 import SalePage from '../pages/SalePage';
+import PosPage from '../pages/PosPage';
 
 
 const ContainerRoute = ({ component: Component, ...rest }) => (
@@ -47,6 +48,7 @@ class AppRoute extends Component {
             <Redirect to="/dashboard" />
           </Route>
           <ContainerRoute path="/dashboard" component={DashboardPage} />
+          <ContainerRoute path="/pos" component={PosPage} />
           <ContainerRoute path="/product" component={ProductPage} />
           <ContainerRoute path="/import-product" component={ImportProductPage} />
           <ContainerRoute path="/category" component={CategoryPage} />

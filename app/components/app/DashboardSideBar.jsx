@@ -26,7 +26,9 @@ const DashboardHeader = () => {
         <Item key="#/dashboard" icon={<LineChartOutlined />}>
           <Link to='/dashboard'>Dashboard</Link>
         </Item>
-        <Item key="2" icon={<ShoppingCartOutlined />}>POS</Item>
+        <Item key="#/pos" icon={<ShoppingCartOutlined />}>
+          <Link to='/pos'>POS</Link>
+        </Item>
         <SubMenu
           key="sub1"
           title={
