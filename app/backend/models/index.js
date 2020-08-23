@@ -5,3 +5,4 @@ export Sale from './Sale';
 export User from './User';
 export Store from './Store';
 export Role from './Role';
+export Customer from './Customer';
