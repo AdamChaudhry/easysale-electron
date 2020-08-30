@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
 import { Select, Input, Table, Descriptions, Button, Row, Col, Divider } from 'antd';
 import { PlusOutlined } from '@ant-design/icons'
+import { debounce } from 'lodash';
 
 const { Option } = Select;
 const { Group } = Input;
 
 class Cart extends Component {
+
+  handleSearchProducts = debounce(({ target: { value }}) => {
+
+  }, 500)
+
   render() {
     const { customers } = this.props;
 
@@ -26,6 +32,8 @@ class Cart extends Component {
           />
         </Group>
         <Select
+          showSearch
+          onSearch={(e) => console.log('........................', e)}
           style={{
             width: '100%',
             marginTop: '5px'
