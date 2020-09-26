@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Select, Input, Table, Descriptions, Button, Row, Col, Divider } from 'antd';
+import { Select, Input, Table, Descriptions, Button, Row, Col, Divider, InputNumber } from 'antd';
 import { PlusOutlined } from '@ant-design/icons'
 import { debounce } from 'lodash';
 
@@ -7,15 +7,101 @@ const { Option } = Select;
 const { Group } = Input;
 
 class Cart extends Component {
+  state = {
+    cartItems: []
+  }
 
-  handleSearchProducts = debounce(({ target: { value }}) => {
+  columns = [
+    {
+      title: 'Code',
+      dataIndex: 'Code',
+      key: 'Code',
+      width: 70,
+      render: (text) => text || 'N/A'
+    },
+    {
+      title: 'Name',
+      dataIndex: 'Name',
+      key: 'Name'
+    },
+    {
+      title: 'Qty',
+      dataIndex: 'Qty',
+      key: 'Qty',
+      width: 100,
+      align: 'center',
+      render: (text, record) => {
+        const { _id } = record;
+        return (
+          <InputNumber
+            onChange={(qty) => handleOnChangeQty({ qty, id: _id })}
+            value={text}
+            min={1}
+          />
+        )
+      }
+    },
+    {
+      title: 'Price',
+      dataIndex: 'Price',
+      key: 'Price'
+    },
+    {
+      title: 'Total',
+      dataIndex: 'Name',
+      key: 'Name'
+    }
+  ]
 
-  }, 500)
+  handleAddToCart = (product) => {
+    const { cartItems } = this.state;
+    debugger
+
+    const index = cartItems.findIndex(({ _id }) => _id == product._id);
+    if (index !== -1) {
+      cartItems[index].Qty += 1;
+    }
+    else {
+      cartItems.push({
+        ProductId: product._id,
+        Name: product.Name,
+        Qty: 1,
+        Price: product.Price
+      })
+    }
+
+    this.setState({ cartItems: [...cartItems] });
+  }
+
+  handleOnChangeSearch = (id) => {
+    const { products } = this.props;
+    const product = products.find(({ _id }) => _id == id);
+    this.handleAddToCart(product);
+  }
+
+  handleSearchProducts = (name) => {
+    const { getProductsByName } = this.props;
+    getProductsByName({ name });
+  }
 
   render() {
-    const { customers } = this.props;
+    const { customers, products } = this.props;
+    const { cartItems } = this.state;
 
     const customerOptions = customers.map(({ Name, _id }) => <Option key={_id} title={Name}>{Name}</Option>)
+    const productOptions = products.map(({ Name, _id, Price, Stock }) => {
+      return (
+        <Option key={_id} value={_id}>
+          <div>
+            <div>{Name}</div>
+            <div style={{ fontSize: '12px', display: 'flex' }}>
+              <div style={{ width: '70px' }}>Rs {Price}</div>
+              <div>Stock 5</div>
+            </div>
+          </div>
+        </Option>
+      )
+    })
     return (
       <div style={{ height: '100%' }}>
         <Group compact>
@@ -33,21 +119,28 @@ class Cart extends Component {
         </Group>
         <Select
           showSearch
-          onSearch={(e) => console.log('........................', e)}
+          filterOption={false}
+          onSearch={this.handleSearchProducts}
           style={{
             width: '100%',
             marginTop: '5px'
           }}
           placeholder='Search Products'
-          showArrow={false}
-        />
+          onChange={this.handleOnChangeSearch}
+          showArrow={false}>
+          {productOptions}
+        </Select>
         <div
           style={{
             margin: '5px 0px',
             height: 'calc(100% - 224px)',
             background: '#fff'
           }}>
-          <Table />
+          <Table
+            columns={this.columns}
+            dataSource={cartItems}
+            pagination={false}
+          />
         </div>
         <div style={{ background: '#fff', padding: '10px' }}>
           <Row>

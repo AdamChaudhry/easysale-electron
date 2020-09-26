@@ -1,6 +1,7 @@
 const initialState = {
   loading: 0,
   customers: [],
+  products: []
 };
 
 const pos = (state = initialState, action) => {

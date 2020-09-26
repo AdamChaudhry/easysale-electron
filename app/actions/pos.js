@@ -31,13 +31,17 @@ export const getProductsByName = ({ name }) => (dispatch, getState) => {
 
   ipcRenderer
     .invoke('GET_PRODUCTS_BY_NAME', {
-      token
+      token,
+      filter: {
+        keyword: name
+      },
+      limit: 100
     })
     .then(data => {
-      const { customers } = data || {};
+      const { products } = data || {};
       return dispatch({
         type: 'GET_PRODUCTS_BY_NAME_FOR_POS_SUCCESS',
-        payload: { customers }
+        payload: { products }
       });
     })
     .catch(() => {
