@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { Select, Input, Table, Descriptions, Button, Row, Col, Divider, InputNumber } from 'antd';
-import { PlusOutlined } from '@ant-design/icons'
+import { Select, Input, Table, Descriptions, Button, Row, Col, Divider, InputNumber, Tooltip } from 'antd';
+import { PlusOutlined, DeleteOutlined, PercentageOutlined } from '@ant-design/icons'
 import { debounce } from 'lodash';
+
+import CheckoutModal from './CheckoutModal';
 
 const { Option } = Select;
 const { Group } = Input;
@@ -31,12 +33,14 @@ class Cart extends Component {
       width: 100,
       align: 'center',
       render: (text, record) => {
-        const { _id } = record;
+        const { ProductId } = record;
         return (
           <InputNumber
-            onChange={(qty) => handleOnChangeQty({ qty, id: _id })}
+            size='small'
+            width={50}
             value={text}
             min={1}
+            onPressEnter={(e) => this.handleOnChangeQty(e, ProductId)}
           />
         )
       }
@@ -48,16 +52,47 @@ class Cart extends Component {
     },
     {
       title: 'Total',
-      dataIndex: 'Name',
-      key: 'Name'
+      render: (text, record) => {
+        const { Qty, Price } = record;
+        return Qty * Price;
+      }
+    },
+    {
+      title: 'Actions',
+      align: 'right',
+      render: (text, record) => {
+        return (
+          <div>
+            <Group compact>
+              <Tooltip
+                title='Add Discount'
+                placement='topLeft'>
+                <Button
+                  size='small'
+                  type='primary'
+                  icon={<PercentageOutlined />}
+                />
+              </Tooltip>
+              <Tooltip
+                title='Remove from Cart'
+                placement='topLeft'>
+                <Button
+                  size='small'
+                  type='dashed'
+                  icon={<DeleteOutlined />}
+                />
+              </Tooltip>
+            </Group>
+          </div>
+        )
+      }
     }
   ]
 
   handleAddToCart = (product) => {
     const { cartItems } = this.state;
-    debugger
 
-    const index = cartItems.findIndex(({ _id }) => _id == product._id);
+    const index = cartItems.findIndex(({ ProductId }) => ProductId == product._id);
     if (index !== -1) {
       cartItems[index].Qty += 1;
     }
@@ -84,9 +119,30 @@ class Cart extends Component {
     getProductsByName({ name });
   }
 
+  handleOnChangeQty = ({ target: { value }}) => {
+    console.log('..............', value)
+  }
+
+  getCartSummery = () => {
+    const { cartItems } = this.state;
+
+    let subTotal = 0;
+    let totalItems = 0;
+    const totalCartRows = cartItems.length;
+
+    cartItems.forEach(({ Qty, Price }) => {
+      subTotal += Qty * Price;
+      totalItems += Qty;
+    })
+
+    return [subTotal, totalItems, totalCartRows];
+  }
+
   render() {
     const { customers, products } = this.props;
     const { cartItems } = this.state;
+
+    const [ subTotal, totalItems, totalCartRows ] = this.getCartSummery();
 
     const customerOptions = customers.map(({ Name, _id }) => <Option key={_id} title={Name}>{Name}</Option>)
     const productOptions = products.map(({ Name, _id, Price, Stock }) => {
@@ -138,8 +194,9 @@ class Cart extends Component {
           }}>
           <Table
             columns={this.columns}
-            dataSource={cartItems}
+            dataSource={cartItems.reverse()}
             pagination={false}
+            size='small'
           />
         </div>
         <div style={{ background: '#fff', padding: '10px' }}>
@@ -151,7 +208,7 @@ class Cart extends Component {
                 </Col>
                 <Col span={12}>
                   <div style={{ textAlign: 'right' }}>
-                    <strong>0 (0)</strong>
+                    <strong>{totalCartRows} ({totalItems})</strong>
                   </div>
                 </Col>
               </Row>
@@ -179,11 +236,11 @@ class Cart extends Component {
             <Col span={11}>
               <Row>
                 <Col span={12}>
-                  Total Items
+                  Sub Total
                 </Col>
                 <Col span={12}>
                   <div style={{ textAlign: 'right' }}>
-                    <strong>0 (0)</strong>
+                    <strong>Rs {subTotal}</strong>
                   </div>
                 </Col>
               </Row>
@@ -205,7 +262,7 @@ class Cart extends Component {
             </Col>
             <Col span={12}>
               <h2>
-                <div style={{ textAlign: 'right' }}>Rs 1,454</div>
+                <div style={{ textAlign: 'right' }}>Rs {subTotal}</div>
               </h2>
             </Col>
           </Row>
@@ -225,6 +282,8 @@ class Cart extends Component {
             </Button>
           </div>
         </div>
+
+        <CheckoutModal/>
       </div>
     )
   }
