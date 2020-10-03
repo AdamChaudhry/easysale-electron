@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Select, Input, Table, Descriptions, Button, Row, Col, Divider, InputNumber, Tooltip } from 'antd';
+import { Select, Input, Table, Descriptions, Button, Row, Col, Divider, InputNumber, Tooltip, notification } from 'antd';
 import { PlusOutlined, DeleteOutlined, PercentageOutlined } from '@ant-design/icons'
 import { debounce } from 'lodash';
 
@@ -10,7 +10,22 @@ const { Group } = Input;
 
 class Cart extends Component {
   state = {
-    cartItems: []
+    cartItems: [],
+    isCheckoutModalOpen: false
+  }
+
+  handleProceed = () => {
+    const { cartItems } = this.state;
+
+    if (!cartItems || !cartItems.length) {
+      return notification.info({
+        message: 'CHECK OUT',
+        description: 'Please add products into Cart to proceed.',
+        placement: 'bottomRight'
+      });
+    }
+
+    this.setState({ isCheckoutModalOpen: true });
   }
 
   columns = [
@@ -277,13 +292,19 @@ class Cart extends Component {
             </Button>
             <Button
               style={{ marginLeft: '5px', width: '33.33%' }}
+              onClick={this.handleProceed}
               type='primary'>
               Proceed
             </Button>
           </div>
         </div>
 
-        <CheckoutModal/>
+        <CheckoutModal
+          {...this.state}
+          {...this.props}
+          onClose={() => this.setState({ isCheckoutModalOpen: false })}
+          getCartSummery={this.getCartSummery}
+        />
       </div>
     )
   }
