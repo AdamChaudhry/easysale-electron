@@ -11,7 +11,8 @@ const { Group } = Input;
 class Cart extends Component {
   state = {
     cartItems: [],
-    isCheckoutModalOpen: false
+    isCheckoutModalOpen: false,
+    customerId: ''
   }
 
   handleProceed = () => {
@@ -159,7 +160,7 @@ class Cart extends Component {
 
     const [ subTotal, totalItems, totalCartRows ] = this.getCartSummery();
 
-    const customerOptions = customers.map(({ Name, _id }) => <Option key={_id} title={Name}>{Name}</Option>)
+    const customerOptions = customers.map(({ Name, _id }) => <Option key={_id} value={_id} title={Name}>{Name}</Option>)
     const productOptions = products.map(({ Name, _id, Price, Stock }) => {
       return (
         <Option key={_id} value={_id}>
@@ -179,6 +180,7 @@ class Cart extends Component {
           <Select
             allowClear
             showSearch
+            onChange={(customerId) => this.setState({ customerId })}
             style={{ width: 'calc(100% - 31px)' }}
             placeholder='Select Customer'>
             {customerOptions}

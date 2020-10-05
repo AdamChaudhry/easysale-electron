@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron';
 import { getCustomers } from '../services/customer';
-import authenticateUser from '../services/auth/authenticateUser'
+import authenticateUser from '../services/auth/authenticateUser';
 
 ipcMain.handle('GET_CUSTOMERS', async (event, { token, ...rest }) => {
   const { user, error } = await authenticateUser({ token });

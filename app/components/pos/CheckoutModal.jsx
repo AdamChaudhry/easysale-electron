@@ -9,7 +9,7 @@ const style = {
   borderBottom: '1px solid #d0d0d0'
 }
 
-export default ({ isCheckoutModalOpen, onClose, cartItems, getCartSummery }) => {
+export default ({ isCheckoutModalOpen, onClose, cartItems, getCartSummery, checkout }) => {
   const [isPayWithCard, setIsPayWithCard] = useState(false);
   const [subTotal, totalItems, totalCartRows] = getCartSummery();
   const [notes, setNotes] = useState('');
@@ -24,6 +24,10 @@ export default ({ isCheckoutModalOpen, onClose, cartItems, getCartSummery }) => 
 
   const handleOnPreset = (amount) => {
     setTotalPaying(amount);
+  }
+
+  const handleCheckout = () => {
+    checkout({})
   }
 
   return (
@@ -106,7 +110,7 @@ export default ({ isCheckoutModalOpen, onClose, cartItems, getCartSummery }) => 
             <h2>Customer's Balance</h2>
           </div>
           <div>
-            <h2>Rs {balance < 0 ? 0 : balance}</h2>
+            <h2>Rs {isPayWithCard ? 0 : balance}</h2>
           </div>
         </div>
       </div>
