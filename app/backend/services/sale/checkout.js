@@ -1,6 +1,6 @@
 import Sale from '../../models/Sale';
 
-const checkout = async ({ user, customerId, customerName, cartItems, paymentMode, cardNo, note }) => {
+const checkout = async ({ user, customerId, customerName, cartItems, paymentMode, cardNo, note, receivedFromCustomer }) => {
   try {
     const sale = new Sale({
       CustomerId: customerId,
@@ -10,7 +10,8 @@ const checkout = async ({ user, customerId, customerName, cartItems, paymentMode
       CardNo: cardNo,
       Note: note,
       CartItems: cartItems,
-      Status: 0
+      Status: 0,
+      ReceivedFromCustomer: receivedFromCustomer
     });
 
     await sale.save();

@@ -13,27 +13,40 @@ export default ({ isCheckoutModalOpen, onClose, cartItems, getCartSummery, check
   const [isPayWithCard, setIsPayWithCard] = useState(false);
   const [subTotal, totalItems, totalCartRows] = getCartSummery();
   const [notes, setNotes] = useState('');
-  const [totalPaying, setTotalPaying] = useState(0);
-  const balance = totalPaying - subTotal;
+  const [receivedFromCustomer, setReceivedFromCustomer] = useState('');
+  const [cardNo, setCardNo] = useState('');
+  const balance = receivedFromCustomer - subTotal;
 
-  const handleOnChangeTotalPaying = ({ target: { value }}) => {
+  const handleOnChangeReceivedFromCustomer = ({ target: { value }}) => {
     if (/^\d*\.?\d*$/.test(value)) {
-      setTotalPaying(value)
+      setReceivedFromCustomer(value)
     }
   }
 
   const handleOnPreset = (amount) => {
-    setTotalPaying(amount);
+    setReceivedFromCustomer(amount);
   }
 
   const handleCheckout = () => {
-    checkout({})
+    checkout({
+      customerId: null,
+      customerName: null,
+      cartItems,
+      paymentMode: isPayWithCard ? 1 : 0,
+      cardNo: isPayWithCard ? cardNo : null,
+      note: notes,
+      receivedFromCustomer
+    })
+      .then(() => {
+
+      })
   }
 
   return (
     <Modal
       okText='Checkout'
       title='Checkout'
+      onOk={handleCheckout}
       onCancel={onClose}
       closable={false}
       visible={isCheckoutModalOpen}>
@@ -82,6 +95,7 @@ export default ({ isCheckoutModalOpen, onClose, cartItems, getCartSummery, check
             <Input
               disabled={!isPayWithCard}
               addonBefore='Card No.'
+              onChange={({ target: { value }}) => setCardNo(value)}
               style={{ width: '320px' }}
             />
           </div>
@@ -101,9 +115,9 @@ export default ({ isCheckoutModalOpen, onClose, cartItems, getCartSummery, check
         <Input
           disabled={isPayWithCard}
           style={{ marginTop: '20px', textAlign: 'right' }}
-          addonBefore='Total Paying (Rs)'
-          value={totalPaying}
-          onChange={handleOnChangeTotalPaying}
+          addonBefore='Received from Customer (Rs)'
+          value={receivedFromCustomer}
+          onChange={handleOnChangeReceivedFromCustomer}
         />
         <div style={{ ...style, border: '0px' }}>
           <div>

@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
+import shortid from 'shortid';
 
 const { Schema } = mongoose;
-import shortId from 'shortid';
 
 const SaleSchema = new Schema({
   InvoiceNo: {
+    alias: 'invoiceNo',
     type: String,
     required: true,
     unique: true,
@@ -13,29 +14,51 @@ const SaleSchema = new Schema({
       return `ivc-${code}`
     }
   },
-  CustomerName: { type: String },
+  CustomerName: {
+    type: String,
+    alias: 'customerName'
+  },
   CustomerId: {
     type: mongoose.Schema.Types.ObjectId,
+    alias: 'customerId',
     ref: 'Customer'
   },
-  CartItems: { type: Array },
+  CartItems: {
+    type: Array,
+    alias: 'cartItems'
+  },
   UserId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Customer'
+    alias: 'userId',
+    ref: 'User'
   },
   PaymentMode: {
     type: Number,
+    alias: 'paymentMode',
     required: true
   },
-  CardNo: { type: String },
-  Note: { type: String },
+  CardNo: {
+    type: String,
+    alias: 'cardNo'
+  },
+  Note: {
+    type: String,
+    alias: 'note'
+  },
   Date: {
     type: Date,
+    alias: 'date',
     required: true,
     default: new Date()
   },
   Status: {
     type: Number,
+    alias: 'status',
+    required: true
+  },
+  ReceivedFromCustomer: {
+    type: Number,
+    alias: 'receivedFromCustomer',
     required: true
   }
 }, {

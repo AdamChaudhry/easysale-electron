@@ -49,37 +49,16 @@ export const getProductsByName = ({ name }) => (dispatch, getState) => {
     });
 };
 
-export const checkout = ({ customerId, note, PaymentMode, CardNo }) => (dispatch, getState) => {
-  const { auth } = getState();
-  const { token } = auth || {};
-
-  dispatch({ type: 'GET_PRODUCTS_BY_NAME_FOR_POS_REQUEST' });
-
-  ipcRenderer
-    .invoke('GET_PRODUCTS_BY_NAME', {
-      token,
-    })
-    .then(data => {
-      const { products } = data || {};
-      return dispatch({
-        type: 'GET_PRODUCTS_BY_NAME_FOR_POS_SUCCESS',
-        payload: { products }
-      });
-    })
-    .catch(() => {
-      dispatch({ type: 'GET_PRODUCTS_BY_NAME_FOR_POS_FAILED' });
-    });
-};
-
-export const checkout = ({ customerId, note, PaymentMode, CardNo }) => (dispatch, getState) => {
+export const checkout = (data) => (dispatch, getState) => {
   const { auth } = getState();
   const { token } = auth || {};
 
   dispatch({ type: 'CHECKOUT_FOR_POS_REQUEST' });
 
-  ipcRenderer
+  return ipcRenderer
     .invoke('CHECKOUT', {
       token,
+      data
     })
     .then((data) => {
       const { product, error } = data || {};
@@ -92,7 +71,7 @@ export const checkout = ({ customerId, note, PaymentMode, CardNo }) => (dispatch
 
       notification.error({
         message: 'SAVE PRODUCT',
-        description: 'Product has been saved successgully',
+        description: error.message,
         placement: 'bottomRight'
       });
 

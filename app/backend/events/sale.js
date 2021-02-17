@@ -11,5 +11,5 @@ ipcMain.handle('CHECKOUT', async (event, { token, ...rest }) => {
   const { user, error } = await authenticateUser({ token });
   if (error) return { error };
 
-  return await checkout({ user, ...rest });
+  return await checkout({ user, ...rest.data });
 });

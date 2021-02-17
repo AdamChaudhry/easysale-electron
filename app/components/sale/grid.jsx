@@ -23,7 +23,7 @@ class SaleHistoryGrid extends Component {
     },
     {
       headerName: 'Code',
-      field: 'Code',
+      field: 'invoice',
       width: 100,
       cellRenderer: ({ value }) => value || 'N/A'
     },

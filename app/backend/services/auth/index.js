@@ -1,2 +1,2 @@
-export login from './login';
-export authenticateUser from './authenticateUser'
+export { default as login} from './login';
+export { default as authenticateUser } from './authenticateUser'
