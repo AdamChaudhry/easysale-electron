@@ -12,10 +12,11 @@ import CategoryPage from '../pages/CategoryPage';
 import ManufacturerPage from '../pages/ManufacturerPage';
 import SalePage from '../pages/SalePage';
 import PosPage from '../pages/PosPage';
-
+import PurchaseHistoryPage from '../pages/PurchaseHistoryPage';
+import PurchasePage from '../pages/PurchasePage';
 
 const ContainerRoute = ({ component: Component, ...rest }) => (
-  <Route {...rest} render={(props) => <Component {...props} />} />
+  <Route {...rest} render={props => <Component {...props} />} />
 );
 
 class AppRoute extends Component {
@@ -29,17 +30,20 @@ class AppRoute extends Component {
   render() {
     const { loading, token, user } = this.props;
     if (loading) {
-      return (<Spin tip="Loading..." spinning={true} style={{'marginTop': '20%'}}> </Spin>);
+      return (
+        <Spin tip="Loading..." spinning={true} style={{ marginTop: '20%' }}>
+          {' '}
+        </Spin>
+      );
     }
 
     if (user && Object.keys(user).length && !token) {
-      return <Redirect to='/auth/login'/>
+      return <Redirect to="/auth/login" />;
     }
 
     if (!token) {
-      return <Redirect to='/auth/initial-login'/>
+      return <Redirect to="/auth/initial-login" />;
     }
-
 
     return (
       <AppLayout>
@@ -50,11 +54,19 @@ class AppRoute extends Component {
           <ContainerRoute path="/dashboard" component={DashboardPage} />
           <ContainerRoute path="/pos" component={PosPage} />
           <ContainerRoute path="/product" component={ProductPage} />
-          <ContainerRoute path="/import-product" component={ImportProductPage} />
+          <ContainerRoute
+            path="/import-product"
+            component={ImportProductPage}
+          />
           <ContainerRoute path="/category" component={CategoryPage} />
           <ContainerRoute path="/manufacturer" component={ManufacturerPage} />
           <ContainerRoute path="/sale" component={SalePage} />
-          <Redirect from='*' to='/not-found' />
+          <ContainerRoute
+            path="/purchase-history"
+            component={PurchaseHistoryPage}
+          />
+          <ContainerRoute path="/purchase-page" component={PurchasePage} />
+          <Redirect from="*" to="/not-found" />
         </Switch>
       </AppLayout>
     );
@@ -62,4 +74,4 @@ class AppRoute extends Component {
 }
 
 const mapStateToProps = ({ auth }) => ({ ...auth });
-export default connect(mapStateToProps , actions)(AppRoute);
+export default connect(mapStateToProps, actions)(AppRoute);
