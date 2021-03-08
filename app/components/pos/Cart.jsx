@@ -4,6 +4,11 @@ import { PlusOutlined, DeleteOutlined, PercentageOutlined } from '@ant-design/ic
 import { debounce } from 'lodash';
 
 import CheckoutModal from './CheckoutModal';
+import DiscountModal from './DiscountModal';
+
+import getDiscount from '../../utils/get-discount';
+import { NUMBER } from '../../constants/regex';
+import CartItem from '../../utils/models/CartItem';
 
 const { Option } = Select;
 const { Group } = Input;
@@ -12,7 +17,9 @@ class Cart extends Component {
   state = {
     cartItems: [],
     isCheckoutModalOpen: false,
-    customerId: ''
+    customerId: '',
+    isDiscountModalOpen: false,
+    selectedProductId: ''
   }
 
   handleProceed = () => {
@@ -29,6 +36,22 @@ class Cart extends Component {
     this.setState({ isCheckoutModalOpen: true });
   }
 
+  handleDiscountModal = ({ productId }) => {
+    this.setState({
+      selectedProductId: productId,
+      isDiscountModalOpen: true
+    });
+  }
+
+  handleApplyDiscount = (discount) => {
+    const { cartItems, selectedProductId } = this.state;
+    const index = cartItems.findIndex(({ ProductId }) => ProductId == selectedProductId.ProductId);
+    if (index !== -1) {
+      cartItems[index].discount = discount;
+      this.setState({ cartItems: [...cartItems] });
+    }
+  }
+
   columns = [
     {
       title: 'Code',
@@ -39,8 +62,8 @@ class Cart extends Component {
     },
     {
       title: 'Name',
-      dataIndex: 'Name',
-      key: 'Name'
+      key: 'Name',
+      render: (text, { getProductName }) => getProductName()
     },
     {
       title: 'Qty',
@@ -49,28 +72,51 @@ class Cart extends Component {
       width: 100,
       align: 'center',
       render: (text, record) => {
-        const { ProductId } = record;
+        const { getProductId, getQty } = record;
         return (
           <InputNumber
             size='small'
             width={50}
-            value={text}
+            value={getQty()}
             min={1}
-            onPressEnter={(e) => this.handleOnChangeQty(e, ProductId)}
+            onPressEnter={({ target: { value }}) => this.handleOnChangeQty({ value, productId: getProductId() })}
           />
         )
       }
     },
     {
       title: 'Price',
-      dataIndex: 'Price',
-      key: 'Price'
+      key: 'Price',
+      render: (text, { getEachPrice }) => getEachPrice()
     },
     {
       title: 'Total',
       render: (text, record) => {
-        const { Qty, Price } = record;
-        return Qty * Price;
+        const { getDiscountLineTotal, getLineTotal, isDiscountApplied } = record;
+
+        const ConditionalWrapper = ({ condition, wrapper, children }) =>
+          condition ? wrapper(children) : children;
+
+        return (
+          <div>
+            <div>
+              <ConditionalWrapper
+                condition={isDiscountApplied()}
+                wrapper={
+                  children => (
+                    <small>
+                      <strike>{children}</strike>
+                    </small>
+                  )
+                }>
+                {getLineTotal()}
+              </ConditionalWrapper>
+            </div>
+            <div>
+              {isDiscountApplied() && <strong>{getDiscountLineTotal()}</strong>}
+            </div>
+          </div>
+        );
       }
     },
     {
@@ -87,6 +133,7 @@ class Cart extends Component {
                   size='small'
                   type='primary'
                   icon={<PercentageOutlined />}
+                  onClick={() => this.handleDiscountModal({ productId: record.getProductId() })}
                 />
               </Tooltip>
               <Tooltip
@@ -95,6 +142,7 @@ class Cart extends Component {
                 <Button
                   size='small'
                   type='dashed'
+                  onClick={() => this.handleDeleteCartItem({ ProductId: record.ProductId })}
                   icon={<DeleteOutlined />}
                 />
               </Tooltip>
@@ -108,17 +156,20 @@ class Cart extends Component {
   handleAddToCart = (product) => {
     const { cartItems } = this.state;
 
-    const index = cartItems.findIndex(({ ProductId }) => ProductId == product._id);
+    const index = cartItems.findIndex(({ isProductAdded }) => isProductAdded({ productId: product._id}));
     if (index !== -1) {
-      cartItems[index].Qty += 1;
+      const { setQty, getQty } = cartItems[index];
+      setQty((getQty() + 1));
     }
     else {
-      cartItems.push({
-        ProductId: product._id,
-        Name: product.Name,
-        Qty: 1,
-        Price: product.Price
-      })
+      cartItems.push(
+        new CartItem({
+          productId: product._id,
+          name: product.Name,
+          qty: 1,
+          price: product.Price
+        })
+      );
     }
 
     this.setState({ cartItems: [...cartItems] });
@@ -135,8 +186,22 @@ class Cart extends Component {
     getProductsByName({ name });
   }
 
-  handleOnChangeQty = ({ target: { value }}) => {
-    console.log('..............', value)
+  handleOnChangeQty = ({ value, productId }) => {
+    if (!NUMBER.test(value)) return;
+
+    const { cartItems } = this.state;
+    const index = cartItems.findIndex(({ isProductAdded }) => isProductAdded({ productId }));
+    if (index !== -1) {
+      cartItems[index].setQty(+value);
+      this.setState({ cartItems: [...cartItems] });
+    }
+  }
+
+  handleDeleteCartItem = ({ ProductId }) => {
+    const { cartItems } = this.state;
+    this.setState({
+      cartItems: [...cartItems.filter((product) => product.ProductId != ProductId)]
+    });
   }
 
   getCartSummery = () => {
@@ -144,9 +209,11 @@ class Cart extends Component {
 
     let subTotal = 0;
     let totalItems = 0;
+    let netTotal = 0;
+    let totalDiscount = 0;
     const totalCartRows = cartItems.length;
 
-    cartItems.forEach(({ Qty, Price }) => {
+    cartItems.forEach(({ Qty, Price, discount }) => {
       subTotal += Qty * Price;
       totalItems += Qty;
     })
@@ -211,7 +278,7 @@ class Cart extends Component {
           }}>
           <Table
             columns={this.columns}
-            dataSource={cartItems.reverse()}
+            dataSource={cartItems}
             pagination={false}
             size='small'
           />
@@ -306,6 +373,12 @@ class Cart extends Component {
           {...this.props}
           onClose={() => this.setState({ isCheckoutModalOpen: false })}
           getCartSummery={this.getCartSummery}
+        />
+
+        <DiscountModal
+          {...this.state}
+          onClose={() => this.setState({ isDiscountModalOpen: false })}
+          onApplyDiscount={this.handleApplyDiscount}
         />
       </div>
     )
