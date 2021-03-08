@@ -1,13 +1,26 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { Button, Input, Spin, Tooltip } from 'antd';
+import {
+  Button,
+  Spin,
+  Tooltip,
+  PageHeader,
+  Pagination,
+  Select,
+  Icon,
+  Input,
+  Dropdown,
+  Menu
+} from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+
 import moment from 'moment';
 
 const { Group } = Input;
+const { Option } = Select;
 
-class ProductGrid extends Component {
-  columnDefs = [
+const PurchaseHistoryPage = props => {
+  const columnDefs = [
     {
       headerCheckboxSelection: true,
       headerCheckboxSelectionFilteredOnly: true,
@@ -17,7 +30,7 @@ class ProductGrid extends Component {
     },
     {
       headerName: 'Code',
-      field: 'Code',
+      field: 'invoice',
       width: 100,
       cellRenderer: ({ value }) => value || 'N/A'
     },
@@ -85,7 +98,6 @@ class ProductGrid extends Component {
       width: 90,
       pinned: 'right',
       cellRendererFramework: ({ data }) => {
-        const { onClickEdit } = this.props;
         return (
           <div
             style={{
@@ -97,11 +109,7 @@ class ProductGrid extends Component {
           >
             <Group compact>
               <Tooltip title="Edit">
-                <Button
-                  size="small"
-                  onClick={() => onClickEdit({ data })}
-                  icon={<EditOutlined />}
-                />
+                <Button size="small" icon={<EditOutlined />} />
               </Tooltip>
               <Tooltip title="Delete">
                 <Button size="small" icon={<DeleteOutlined />} />
@@ -113,32 +121,68 @@ class ProductGrid extends Component {
     }
   ];
 
-  onGridReady = params => {
-    this.api = params.api;
-    this.columnApi = params.columnApi;
-  };
+  const { saleHistory } = props;
 
-  render() {
-    const { products, loading } = this.props;
-    return (
-      <Spin spinning={loading !== 0}>
+  return (
+    <div style={{ height: 'calc(100% - 95px)' }}>
+      {/* Page Header */}
+      <PageHeader
+        style={{
+          height: '53px',
+          marginBottom: '10px',
+          padding: '7px'
+        }}
+        title="Purchase History"
+        extra={[
+          <Input
+            key="3"
+            width={150}
+            style={{ width: '150px', marginRight: '5px' }}
+            placeholder="Search"
+            allowClear
+          />,
+          <Dropdown.Button
+            overlay={
+              <Menu style={{ width: '140px' }}>
+                <Menu.Item key="1">Export</Menu.Item>
+              </Menu>
+            }
+            key="4"
+            type="primary"
+          >
+            New Product
+          </Dropdown.Button>
+        ]}
+      />
+
+      <Spin spinning={false}>
         <div
           className="ag-theme-alpine"
           style={{ height: '100%', width: '100%' }}
         >
           <AgGridReact
-            columnDefs={this.columnDefs}
-            rowData={products}
-            defaultColDef={{
-              resizable: true
-            }}
-            animateRows={true}
-            onGridReady={this.onGridReady}
+            columnDefs={columnDefs}
+            rowData={[]}
+            // animateRows={true}
           />
         </div>
       </Spin>
-    );
-  }
-}
 
-export default ProductGrid;
+      {/* Footer */}
+      <div style={{ padding: '5px 0px', float: 'right' }}>
+        <Pagination
+          showSizeChanger
+          showQuickJumper
+          total={10}
+          pageSize={4}
+          current={1}
+          showTotal={(total, [start, end]) =>
+            `Showing ${start} to ${end} of ${total}`
+          }
+        />
+      </div>
+    </div>
+  );
+};
+
+export default PurchaseHistoryPage;
