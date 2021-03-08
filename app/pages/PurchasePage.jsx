@@ -39,58 +39,40 @@ const PurchsePage = props => {
       width: 250
     },
     {
-      headerName: 'Description',
+      headerName: 'Company',
       field: 'Description',
       width: 150,
       cellRenderer: ({ value }) => value || 'N/A'
     },
     {
-      headerName: 'Category',
+      headerName: 'Supplier',
       field: 'Category.Name',
       width: 100,
       cellRenderer: ({ value }) => value || 'N/A'
     },
     {
-      headerName: 'Manufacturer',
+      headerName: 'Storage Capacity',
       field: 'Manufacturer.Name',
       width: 100,
       cellRenderer: ({ value }) => value || 'N/A'
     },
     {
-      headerName: 'Type',
+      headerName: 'Remaining Quantity',
       field: 'Type',
       width: 100
       // cellRenderer: ({ value }) => value || 'N/A'
     },
     {
-      headerName: 'Min. Qty',
+      headerName: 'Order Quantity',
       field: 'MinQty',
       width: 100,
       cellRenderer: ({ value }) => value || 'N/A'
     },
     {
-      headerName: 'Stock',
+      headerName: 'Receive Quantity',
       field: 'Stock.Qty',
       width: 100,
       cellRenderer: ({ value }) => value || 'N/A'
-    },
-    {
-      headerName: 'Cost',
-      field: 'Cost',
-      width: 100,
-      cellRenderer: ({ value }) => value || 'N/A'
-    },
-    {
-      headerName: 'Price',
-      field: 'Price',
-      width: 100,
-      cellRenderer: ({ value }) => value || 'N/A'
-    },
-    {
-      headerName: 'Created At',
-      field: 'CreatedAt',
-      width: 150,
-      cellRenderer: ({ value }) => (value ? moment(value).format('LL') : 'N/A')
     },
     {
       headerName: 'Actions',
@@ -122,7 +104,7 @@ const PurchsePage = props => {
   const { saleHistory } = props;
 
   return (
-    <div style={{ height: 'calc(100% - 95px)' }}>
+    <div style={{ height: 'calc(100% - 105px)' }}>
       {/* Page Header */}
       <PageHeader
         style={{
@@ -130,7 +112,7 @@ const PurchsePage = props => {
           marginBottom: '10px',
           padding: '7px'
         }}
-        title="Purchase History"
+        title="New Purchase"
         extra={[
           <Input
             key="3"
@@ -148,7 +130,7 @@ const PurchsePage = props => {
             key="4"
             type="primary"
           >
-            New Product
+            Add Item
           </Dropdown.Button>
         ]}
       />
@@ -161,23 +143,49 @@ const PurchsePage = props => {
           <AgGridReact
             columnDefs={columnDefs}
             rowData={[]}
+            defaultColDef={{ resizable: true }}
             // animateRows={true}
           />
         </div>
       </Spin>
 
       {/* Footer */}
-      <div style={{ padding: '5px 0px', float: 'right' }}>
-        <Pagination
-          showSizeChanger
-          showQuickJumper
-          total={10}
-          pageSize={4}
-          current={1}
-          showTotal={(total, [start, end]) =>
-            `Showing ${start} to ${end} of ${total}`
-          }
-        />
+
+      <div
+        style={{
+          display: 'flex',
+          marginTop: '10px',
+          justifyContent: 'space-between'
+        }}
+      >
+        {/* Total items */}
+        <div>
+          <h1>Total items: 3</h1>
+        </div>
+
+        {/* Pagination */}
+        <div>
+          <Pagination
+            showSizeChanger
+            showQuickJumper
+            total={10}
+            pageSize={4}
+            current={1}
+            showTotal={(total, [start, end]) =>
+              `Showing ${start} to ${end} of ${total}`
+            }
+          />
+        </div>
+        <div>
+          <Button
+            style={{ float: 'right', margin: '0px 8px', width: '140px' }}
+            type="primary"
+          >
+            Done
+          </Button>
+        </div>
+
+        {/* <hr style={{ margin: '8px' }} /> */}
       </div>
     </div>
   );
